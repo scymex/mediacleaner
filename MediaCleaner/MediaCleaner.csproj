@@ -86,22 +86,29 @@
     <Compile Include="DataModels\Plex\Section.cs" />
     <Compile Include="DataModels\Plex\Show.cs" />
     <Compile Include="DataModels\Plex\User.cs" />
-    <Compile Include="Windows\Login.xaml.cs">
-      <DependentUpon>Login.xaml</DependentUpon>
+    <Compile Include="Windows\LoginEmby.xaml.cs">
+      <DependentUpon>LoginEmby.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\LoginScreen.xaml.cs">
-      <DependentUpon>LoginScreen.xaml</DependentUpon>
+    <Compile Include="Windows\LoginEmby_password.xaml.cs">
+      <DependentUpon>LoginEmby_password.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LoginPlex.xaml.cs">
+      <DependentUpon>LoginPlex.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModels\Sonarr\Episode.cs" />
     <Compile Include="DataModels\Sonarr\EpisodeFile.cs" />
     <Compile Include="DataModels\Sonarr\Series.cs" />
     <Compile Include="APIClients\Sonarr\SonarrApi.cs" />
     <Compile Include="DataModels\Sonarr\SystemStatus.cs" />
-    <Page Include="Windows\Login.xaml">
+    <Page Include="Windows\LoginEmby.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\LoginScreen.xaml">
+    <Page Include="Windows\LoginEmby_password.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\LoginPlex.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

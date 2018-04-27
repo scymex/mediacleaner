@@ -44,5 +44,14 @@
     <Setting Name="plex_clienttoken" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="emby_address" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://127.0.0.1:8096</Value>
+    </Setting>
+    <Setting Name="sonarr_address" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://127.0.0.1:8989</Value>
+    </Setting>
+    <Setting Name="plex_address" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://127.0.0.1:32400</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

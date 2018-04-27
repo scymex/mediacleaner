@@ -8,6 +8,48 @@ namespace MediaCleaner
 {
     public class Config
     {
+        // Sonarr server ip and port
+        public static string SonarrAddress
+        {
+            get
+            {
+                return Properties.Settings.Default.sonarr_address;
+            }
+            set
+            {
+                Properties.Settings.Default.sonarr_address = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        // Emby server ip and port
+        public static string EmbyAddress
+        {
+            get
+            {
+                return Properties.Settings.Default.emby_address;
+            }
+            set
+            {
+                Properties.Settings.Default.emby_address = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        // Plex server ip and port
+        public static string PlexAddress
+        {
+            get
+            {
+                return Properties.Settings.Default.plex_address;
+            }
+            set
+            {
+                Properties.Settings.Default.plex_address = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
         // Emby Username
         public static string embyUsername
         {

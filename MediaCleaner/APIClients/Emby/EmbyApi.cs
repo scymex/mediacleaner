@@ -11,7 +11,7 @@ namespace MediaCleaner.Emby
     class EmbyApi
     {
         // EMBY
-        string URL_emby = "http://192.168.1.214:8096";
+        string URL_emby = Config.EmbyAddress;
         RestClient client;
 
         JsonDeserializer deserialCount = new JsonDeserializer();

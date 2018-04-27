@@ -190,5 +190,41 @@ namespace MediaCleaner.Properties {
                 this["plex_clienttoken"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://127.0.0.1:8096")]
+        public string emby_address {
+            get {
+                return ((string)(this["emby_address"]));
+            }
+            set {
+                this["emby_address"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://127.0.0.1:8989")]
+        public string sonarr_address {
+            get {
+                return ((string)(this["sonarr_address"]));
+            }
+            set {
+                this["sonarr_address"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://127.0.0.1:32400")]
+        public string plex_address {
+            get {
+                return ((string)(this["plex_address"]));
+            }
+            set {
+                this["plex_address"] = value;
+            }
+        }
     }
 }

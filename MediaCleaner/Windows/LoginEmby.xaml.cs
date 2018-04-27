@@ -8,7 +8,7 @@ using MediaCleaner.Emby;
 namespace MediaCleaner
 {
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for LoginEmby.xaml
 
     public class SampleData
     {
@@ -31,11 +31,11 @@ namespace MediaCleaner
         }
     }
 
-    public partial class Login : Window
+    public partial class LoginEmby : Window
     {
         EmbyApi embyApi;
         public bool LoginSuccessful;
-        public Login()
+        public LoginEmby()
         {
             InitializeComponent();
             embyApi = new EmbyApi();
@@ -85,7 +85,7 @@ namespace MediaCleaner
 
             if (item1.HasPassword)
             {
-                LoginScreen login = new LoginScreen(username, 1);
+                LoginPlex login = new LoginPlex(username, 1);
                 login.ShowDialog();
                 if (login.LoginSuccessful == true)
                 {

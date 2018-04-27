@@ -5,41 +5,120 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaCleaner"
         mc:Ignorable="d"
-        Title="Settings" Height="335" Width="525"
+        Title="Settings" Height="472" Width="525"
         WindowStartupLocation="CenterScreen" >
-    <Grid Margin="0,0,0,0">
-        <Grid HorizontalAlignment="Left" Height="284" Margin="10,10,0,0" VerticalAlignment="Top" Width="166">
-            <Label Content="ApiKey (sonarr)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,0,0,0"/>
-            <Label Content="Minimum Hours to keep" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,31,0,0"/>
-            <Label Content="Minimum Episodes to keep" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,62,0,0"/>
-            <Label Content="Interval (minutes)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,93,0,0"/>
-            <Label x:Name="username_emby_label" Content="Username (emby)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,155,0,0"/>
-            <Label x:Name="username_plex_label" Content="Username (Plex)" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" RenderTransformOrigin="1.026,0.683" Margin="10,155,0,0"/>
-            <Label x:Name="userid_emby_label" Content="User id (emby)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,186,0,0" />
-            <Label x:Name="userid_plex_label" Content="???? (Plex)" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"  RenderTransformOrigin="1.026,0.683" Margin="10,186,0,0" />
-            <Label Content="Keep favorite Episodes" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,217,0,0" />
-            <Label Content="Media Server" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,124,0,0"/>
-            <Label x:Name="keepfavoritenot" Content="Not available with Plex" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="30,236,0,0" FontSize="8" />
-        </Grid>
-        <Grid HorizontalAlignment="Left" Height="284" Margin="181,10,0,0" VerticalAlignment="Top" Width="226">
-            <TextBox x:Name="apikey" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
-            <TextBox x:Name="hoursToKeep" HorizontalAlignment="Left" Height="26" Margin="10,31,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
-            <TextBox x:Name="episodesToKeep" HorizontalAlignment="Left" Height="26" Margin="10,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
-            <TextBlock x:Name="username" HorizontalAlignment="Left" Margin="10,161,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
-            <TextBlock x:Name="userid" HorizontalAlignment="Left" Margin="10,190,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
-            <TextBox x:Name="interval" HorizontalAlignment="Left" Height="26" Margin="10,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
-            <CheckBox Content="" x:Name="favoriteEpisodes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="10,217,0,0" Height="26" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <ComboBox x:Name="mediaserver" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged">
-                <ComboBoxItem Content="Plex"></ComboBoxItem>
-                <ComboBoxItem Content="Emby"></ComboBoxItem>
-            </ComboBox>
+    <Grid Margin="0,0,0,-1">
+        <Grid HorizontalAlignment="Left" Height="160" Margin="10,10,0,0" VerticalAlignment="Top" Width="497">
+            <CheckBox Content="Debug" x:Name="debug" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="439,0,0,0"/>
 
+            <Label Content="Main" HorizontalAlignment="Left" Margin="0,-14,0,0" VerticalAlignment="Top" FontSize="18"/>
+            <Grid Margin="10,10,312,10">
+                <Label Content="Min. time before delete (hours)" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="Min. episodes to keep" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,31,0,0"/>
+                <Label Content="Interval between two runs" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,62,0,0"/>
+                <Label Content="Keep Favorite Episodes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,93,0,0"/>
+                <Label Content="Its not supported with all the MediaServers" HorizontalAlignment="Left" Visibility="Visible" Margin="10,109,0,10" FontSize="8" />
+
+                <!-- labels -->
+            </Grid>
+            <Grid Margin="185,10,10,10">
+                <TextBox x:Name="hoursToKeep" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <TextBox x:Name="episodesToKeep" HorizontalAlignment="Left" Height="26" Margin="10,31,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="interval" HorizontalAlignment="Left" Height="26" Margin="10,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                <CheckBox Content="" x:Name="favoriteEpisodes" HorizontalAlignment="Left" Height="37" Margin="10,93,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+
+                <!-- actual stuff -->
+            </Grid>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="284" Margin="412,10,0,0" VerticalAlignment="Top" Width="75">
-            <CheckBox Content="Debug" x:Name="debug" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="17,0,0,0"/>
-            <Button Content="Save" RenderTransformOrigin="0.151,0.483" Margin="0,224,0,35" Click="Save" Height="25"/>
-            <Button x:Name="login" Content="Login" HorizontalAlignment="Left" Margin="0,254,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login"/>
-            <Button x:Name="changeUser" Content="Change User" HorizontalAlignment="Left" Margin="0,254,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Click="Login" RenderTransformOrigin="-1.813,0.325"/>
+        <Grid HorizontalAlignment="Left" Height="80" Margin="10,155,0,0" VerticalAlignment="Top" Width="497">
+            <Label Content="Sonarr" HorizontalAlignment="Left" Margin="0,-14,0,0" VerticalAlignment="Top" FontSize="18"/>
+            <Grid Margin="10,10,312,10">
+                <Label Content="IP Address and Port" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="API Key" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,31,0,0"/>
+                <!-- labels -->
+            </Grid>
+            <Grid Margin="185,10,10,10">
+                <TextBox x:Name="apikey" ToolTip="stuff, could even be a custom control, etc" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <TextBox x:Name="sonarr_address" HorizontalAlignment="Left" Height="26" Margin="10,31,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                <!-- actual stuff -->
+            </Grid>
+        </Grid>
+
+        <Grid HorizontalAlignment="Left" Margin="10,235,0,0" Width="497" Height="135" VerticalAlignment="Top">
+            <Label Content="MediaServer" HorizontalAlignment="Left" Margin="0,-14,0,0" VerticalAlignment="Top" FontSize="18"/>
+            <Grid Margin="10,10,312,0" Height="25" VerticalAlignment="Top">
+                <Label Content="MediaServer" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.351,0.962" Margin="1,0,0,0"/>
+            </Grid>
+
+            <Grid Margin="185,10,10,0" Height="25" VerticalAlignment="Top">
+                <ComboBox x:Name="mediaserver" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged">
+                    <!-- PLEX -->
+                    <ComboBoxItem Content="Plex"></ComboBoxItem>
+                    <!-- PLEX -->
+                    <ComboBoxItem Content="Emby"></ComboBoxItem>
+                    <!-- ETC 
+                        <ComboBoxItem Content="ETC"></ComboBoxItem>
+                    -->
+                </ComboBox>
+            </Grid>
+
+            <!-- // EMBY // -->
+            <Grid x:Name="emby" HorizontalAlignment="Left" Width="497" Height="170" VerticalAlignment="Top" Visibility="Visible" Margin="0,0,0,-35">
+                <Grid Margin="10,40,312,10">
+                    <Label Content="Emby Address" ToolTip="e.g.: http://127.0.0.1:8092"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,0,0,0" RenderTransformOrigin="0.592,0.731"/>
+                    <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,31,0,0" RenderTransformOrigin="0.541,0.692"/>
+                    <Label Content="UserId" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,62,0,-3" RenderTransformOrigin="0.541,0.692"/>
+                </Grid>
+
+                <Grid Margin="185,40,10,10">
+                    <TextBox x:Name="emby_address" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                    <TextBlock x:Name="emby_username" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+                    <TextBlock x:Name="emby_userid" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+                    <Button x:Name="login_emby" Content="Login" HorizontalAlignment="Left" Margin="-170,95,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login_Emby"/>
+                    <Button x:Name="changeUser_emby" Content="Change User" HorizontalAlignment="Left" Margin="-170,95,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Click="Login_Emby" RenderTransformOrigin="-1.813,0.325"/>
+                </Grid>
+            </Grid>
+            <!-- // EMBY // -->
+
+            <!-- // PLEX // -->
+            <Grid x:Name="plex" HorizontalAlignment="Left" Width="497" Height="170" VerticalAlignment="Top" Visibility="Hidden" Margin="0,0,0,-35">
+                <Grid Margin="10,40,312,10">
+                    <Label Content="Plex Address" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,0,0,0" RenderTransformOrigin="0.592,0.731"/>
+                    <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,31,0,0" RenderTransformOrigin="0.541,0.692"/>
+                    <Label Content="UserId" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,62,0,-3" RenderTransformOrigin="0.541,0.692"/>
+                </Grid>
+
+                <Grid Margin="185,40,10,10">
+                    <TextBox x:Name="plex_address" ToolTip="e.g.: http://127.0.0.1:32400"  HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                    <TextBlock x:Name="plex_username" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+                    <TextBlock x:Name="plex_userid" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+                    <Button x:Name="login_plex" Content="Login" HorizontalAlignment="Left" Margin="-170,95,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login_Plex"/>
+                    <Button x:Name="changeUser_plex" Content="Change User" HorizontalAlignment="Left" Margin="-170,95,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Click="Login_Plex" RenderTransformOrigin="-1.813,0.325"/>
+                </Grid>
+            </Grid>
+            <!-- // EMBY // -->
+
+            <!-- // Additional media server // 
+            <Grid x:Name="plex" Visibility="Hidden" HorizontalAlignment="Left" Width="497" Height="95" VerticalAlignment="Top" Margin="0,40,0,0">
+                <Grid Margin="10,0,312,0">
+                    <Label Content="IP Address and Port" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,0,0,0" RenderTransformOrigin="0.592,0.731"/>
+                    <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,31,0,0" RenderTransformOrigin="0.541,0.692"/>
+                    <Label Content="UserId" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,62,0,-3" RenderTransformOrigin="0.541,0.692"/>
+                </Grid>
+
+                <Grid Margin="185,0,10,0">
+                    <TextBox x:Name="plex_address" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                    <TextBlock x:Name="plex_t1" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+                    <TextBlock x:Name="plex_t2" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+                    <Button x:Name="login_CHANGETHIS" Content="Login" HorizontalAlignment="Left" Margin="-170,70,0,-30" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login_CHANGETHIS"/>
+                    <Button x:Name="changeuser_CHANGETHIS" Content="Change User" HorizontalAlignment="Left"  Margin="-170,70,0,-30" VerticalAlignment="Top" Width="75" Visibility="Hidden" Click="Login_CHANGETHIS" RenderTransformOrigin="-1.813,0.325"/>
+
+                </Grid>
+            </Grid>
+             -->
+        </Grid>
+        <Grid HorizontalAlignment="Left" Margin="10,410,0,10" Width="497">
+            <Button Content="Save" RenderTransformOrigin="0.151,0.483" Click="Save" Margin="0,0,0,0"/>
         </Grid>
     </Grid>
 </Window>

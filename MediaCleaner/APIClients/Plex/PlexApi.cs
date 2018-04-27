@@ -12,7 +12,7 @@ namespace MediaCleaner.Plex
     {
         RestClient client;
         JsonDeserializer deserialCount = new JsonDeserializer();
-        string URL_plex = "http://192.168.1.214:32400";
+        string URL_plex = Config.PlexAddress;
 
         public PlexApi()
         {

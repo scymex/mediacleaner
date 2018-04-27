@@ -8,9 +8,9 @@ using MediaCleaner.Plex;
 namespace MediaCleaner
 {
     /// <summary>
-    /// Interaction logic for LoginScreen.xaml
+    /// Interaction logic for LoginEmby_password.xaml
     /// </summary>
-    public partial class LoginScreen : Window
+    public partial class LoginPlex : Window
     {
         EmbyApi embyApi;
         PlexApi plexApi;
@@ -21,7 +21,7 @@ namespace MediaCleaner
         public string username = "";
         int mediaserver;
 
-        public LoginScreen(string username, int mediaserver_)
+        public LoginPlex(string username, int mediaserver_)
         {
             InitializeComponent();
             mediaserver = mediaserver_;

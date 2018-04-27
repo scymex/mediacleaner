@@ -22,23 +22,29 @@ namespace MediaCleaner
 
     public partial class Settings : Window
     {
+        // Plex
+        Grid plexGrid;
+        TextBox plexAddress;
+        Button plexChangeUserBT;
+        Button plexLoginBT;
+        TextBlock plexUsernameTB;
+        TextBlock plexUserIDTB;
+        // Emby
+        Grid embyGrid;
+        TextBox embyAddress;
+        Button embyChangeUserBT;
+        Button embyLoginBT;
+        TextBlock embyUsernameTB;
+        TextBlock embyUserIDTB;
+
         TextBox output;
         TextBox apikeyTB;
         TextBox hoursToKeepTB;
         TextBox episodesToKeepTB;
         TextBox intervalTB;
-        TextBlock usernameTB;
-        TextBlock useridTB;
         CheckBox debugCB;
         CheckBox favoriteEpisodesCB;
-        Button changeUserBT;
-        Button loginBT;
         ComboBox mediaServerCOB;
-        Label unameEmby;
-        Label useridEmby;
-        Label unamePlex;
-        Label useridPlex;
-        Label keepfavoriteNot;
 
         EmbyApi embyApi;
         SonarrApi sonarrApi;
@@ -54,23 +60,30 @@ namespace MediaCleaner
                 this.Icon = BitmapFrame.Create(stream);
             }
 
+            // Plex
+            plexGrid = (Grid)this.FindName("plex");
+            plexAddress = (TextBox)this.FindName("plex_address");
+            plexChangeUserBT = (Button)this.FindName("changeUser_plex");
+            plexLoginBT = (Button)this.FindName("login_Plex");
+            plexUsernameTB = (TextBlock)this.FindName("plex_username");
+            plexUserIDTB = (TextBlock)this.FindName("plex_userid");
+
+            // Emby
+            embyGrid = (Grid)this.FindName("emby");
+            embyAddress = (TextBox)this.FindName("emby_address");
+            embyChangeUserBT = (Button)this.FindName("changeUser_emby");
+            embyLoginBT = (Button)this.FindName("login_emby");
+            embyUsernameTB = (TextBlock)this.FindName("emby_username");
+            embyUserIDTB = (TextBlock)this.FindName("emby_userid");
+
             apikeyTB = (TextBox)this.FindName("apikey");
             hoursToKeepTB = (TextBox)this.FindName("hoursToKeep");
             episodesToKeepTB = (TextBox)this.FindName("episodesToKeep");
             intervalTB = (TextBox)this.FindName("interval");
             output = (TextBox)this.FindName("tx");
-            usernameTB = (TextBlock)this.FindName("username");
-            useridTB = (TextBlock)this.FindName("userid");
             debugCB = (CheckBox)this.FindName("debug");
             favoriteEpisodesCB = (CheckBox)this.FindName("favoriteEpisodes");
-            changeUserBT = (Button)this.FindName("changeUser");
-            loginBT = (Button)this.FindName("login");
             mediaServerCOB = (ComboBox)this.FindName("mediaserver");
-            unameEmby = (Label)this.FindName("username_emby_label");
-            useridEmby = (Label)this.FindName("userid_emby_label");
-            unamePlex = (Label)this.FindName("username_plex_label");
-            useridPlex = (Label)this.FindName("userid_plex_label");
-            keepfavoriteNot = (Label)this.FindName("keepfavoritenot");
 
             embyApi = new EmbyApi();
             sonarrApi = new SonarrApi();
@@ -96,59 +109,48 @@ namespace MediaCleaner
 
             favoriteEpisodes.IsChecked = Config.favoriteEpisodes;
 
+            plexGrid.Visibility = Visibility.Hidden;
+            embyGrid.Visibility = Visibility.Hidden;
 
+            // 0 == PLEX
             if (Config.MediaServer == 0)
             {
-                unameEmby.Visibility = Visibility.Hidden;
-                useridEmby.Visibility = Visibility.Hidden;
-                unamePlex.Visibility = Visibility.Visible;
-                useridPlex.Visibility = Visibility.Visible;
-                keepfavoriteNot.Visibility = Visibility.Visible;
-                favoriteEpisodesCB.IsEnabled = false;
-                favoriteEpisodesCB.IsChecked = false;
-
-                // Emby username
-                if (Config.plexUsername == "")
-                    usernameTB.Text = "-";
-                else
-                    usernameTB.Text = Config.plexUsername;
-                // emby userid
-                if (Config.plexUuid == "")
-                    useridTB.Text = "-";
-                else
-                    useridTB.Text = Config.plexUuid;
-
-                if (Config.plexUuid != "" || Config.plexUsername != "")
-                {
-                    changeUserBT.Visibility = Visibility.Visible;
-                    loginBT.Visibility = Visibility.Hidden;
-                }
+                intitiatePlex();
+                plexGrid.Visibility = Visibility.Visible;
             } else if(Config.MediaServer == 1)
             {
-                // Emby username
-                if (Config.embyUsername == "")
-                    usernameTB.Text = "-";
-                else
-                    usernameTB.Text = Config.embyUsername;
-                // emby userid
-                if (Config.embyUserid == "")
-                    useridTB.Text = "-";
-                else
-                    useridTB.Text = Config.embyUserid;
-
-                if (Config.embyUsername != "" || Config.embyUserid != "")
-                {
-                    changeUserBT.Visibility = Visibility.Visible;
-                    loginBT.Visibility = Visibility.Hidden;
-                }
-                unameEmby.Visibility = Visibility.Visible;
-                useridEmby.Visibility = Visibility.Visible;
-                unamePlex.Visibility = Visibility.Hidden;
-                useridPlex.Visibility = Visibility.Hidden;
+                intitiateEmby();
+                embyGrid.Visibility = Visibility.Visible;
             }
 
             // Debug checkbox
             debugCB.IsChecked = Config.Debug;
+        }
+
+        private void intitiateEmby()
+        {
+            emby_username.Text = (Config.EmbyAddress == "") ? "-" : Config.embyUsername;
+            emby_username.Text = (Config.embyUsername == "") ? "-" : Config.embyUsername;
+            embyAddress.Text = (Config.EmbyAddress == "") ? "" : Config.EmbyAddress;
+
+            if (Config.embyUsername != "" || Config.embyUserid != "" || Config.embyAccessToken != "")
+            {
+                changeUser_emby.Visibility = Visibility.Visible;
+                login_emby.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void intitiatePlex()
+        {
+            plex_username.Text = (Config.plexUsername == "") ? "-" : Config.plexUsername;
+            plex_userid.Text = (Config.plexUuid == "") ? "-" : Config.plexUuid;
+            plexAddress.Text = (Config.EmbyAddress == "") ? "" : Config.PlexAddress;
+
+            if (Config.embyUsername != "" || Config.embyUserid != "" || Config.plexAccessToken != "")
+            {
+                changeUser_plex.Visibility = Visibility.Visible;
+                login_plex.Visibility = Visibility.Hidden;
+            }
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -168,19 +170,15 @@ namespace MediaCleaner
             Config.episodesToKeep = Int32.Parse(episodesToKeepTB.Text);
             Config.Interval = Int32.Parse(intervalTB.Text);
             Config.favoriteEpisodes = favoriteEpisodesCB.IsChecked.HasValue ? true : false;
-
-            if (mediaServerCOB.SelectedIndex != Config.MediaServer && !SettingsChanged)
-            {
-                Config.embyUsername = "";
-                Config.embyUserid = "";
-                Config.embyAccessToken = "";
-            }
-
             Config.MediaServer = mediaServerCOB.SelectedIndex;
 
+            // Emby
+            Config.EmbyAddress = embyAddress.Text;
+
+            // Plex
+            Config.PlexAddress = plexAddress.Text;
+
             if (sonarrApi.CheckApikey() || 
-                Config.embyUserid == "" || 
-                Config.embyAccessToken == "" || 
                 Config.episodesToKeep < 0 || 
                 Config.Interval < 0)
             {
@@ -193,112 +191,61 @@ namespace MediaCleaner
             }
         }
 
-        private void Login(object sender, RoutedEventArgs e)
+        private void Login_Plex(object sender, RoutedEventArgs e)
         {
-            if (mediaServerCOB.SelectedIndex == 0)
-            {
-                LoginScreen loginscreen = new LoginScreen("", 0);
+                LoginPlex loginscreen = new LoginPlex("", 0);
                 loginscreen.ShowDialog();
                 if(loginscreen.LoginSuccessful)
                 {
-                    usernameTB.Text = Config.plexUsername;
-                    useridTB.Text = Config.plexUuid;
+                    plexUsernameTB.Text = Config.plexUsername;
+                    plexUserIDTB.Text = Config.plexUuid;
                     SettingsChanged = true;
 
-                    changeUserBT.Visibility = Visibility.Visible;
-                    loginBT.Visibility = Visibility.Hidden;
+                    plexChangeUserBT.Visibility = Visibility.Visible;
+                    plexLoginBT.Visibility = Visibility.Hidden;
                 }
+        }
 
-
-            }
-            else if(mediaServerCOB.SelectedIndex == 1)
+        private void Login_Emby(object sender, RoutedEventArgs e)
+        {
+            LoginEmby login = new LoginEmby();
+            login.ShowDialog();
+            if (login.LoginSuccessful)
             {
-                Login login = new Login();
-                login.ShowDialog();
-                if (login.LoginSuccessful)
-                {
-                    usernameTB.Text = Config.embyUsername;
-                    useridTB.Text = Config.embyUserid;
-                    SettingsChanged = true;
+                embyUsernameTB.Text = Config.embyUsername;
+                embyUserIDTB.Text = Config.embyUserid;
+                SettingsChanged = true;
 
-                    changeUserBT.Visibility = Visibility.Visible;
-                    loginBT.Visibility = Visibility.Hidden;
-                }
+                embyChangeUserBT.Visibility = Visibility.Visible;
+                embyLoginBT.Visibility = Visibility.Hidden;
             }
         }
+
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int selecteditem = (sender as ComboBox).SelectedIndex;
-            keepfavoriteNot.Visibility = Visibility.Hidden;
             favoriteEpisodesCB.IsEnabled = true;
             favoriteEpisodesCB.IsChecked = Properties.Settings.Default.favoriteEpisodes;
 
+            plexGrid.Visibility = Visibility.Hidden;
+            embyGrid.Visibility = Visibility.Hidden;
+
+
             if (selecteditem == 0)
             {
-                unameEmby.Visibility = Visibility.Hidden;
-                useridEmby.Visibility = Visibility.Hidden;
-                unamePlex.Visibility = Visibility.Visible;
-                useridPlex.Visibility = Visibility.Visible;
+                plexGrid.Visibility = Visibility.Visible;
 
-                keepfavoriteNot.Visibility = Visibility.Visible;
                 favoriteEpisodesCB.IsEnabled = false;
                 favoriteEpisodesCB.IsChecked = false;
             }
             else if (selecteditem == 1)
             {
-                unameEmby.Visibility = Visibility.Visible;
-                useridEmby.Visibility = Visibility.Visible;
-                unamePlex.Visibility = Visibility.Hidden;
-                useridPlex.Visibility = Visibility.Hidden;
+                intitiateEmby();
+                embyGrid.Visibility = Visibility.Visible;
             }
 
-            if (Config.MediaServer != selecteditem)
-            {
-                changeUserBT.Visibility = Visibility.Hidden;
-                loginBT.Visibility = Visibility.Visible;
-                usernameTB.Text = "-";
-                useridTB.Text = "-";
-            }
 
-            else
-            {
-                if (selecteditem == 0)
-                {
-                    if (Config.plexUsername != "" || Config.plexUuid != "")
-                    {
-                        changeUserBT.Visibility = Visibility.Visible;
-                        loginBT.Visibility = Visibility.Hidden;
-                        usernameTB.Text = Config.plexUsername;
-                        useridTB.Text = Config.plexUuid;
-                    }
-                    else
-                    {
-                        changeUserBT.Visibility = Visibility.Hidden;
-                        loginBT.Visibility = Visibility.Visible;
-                        usernameTB.Text = "-";
-                        useridTB.Text = "-";
-                    }
-                }
-                if (selecteditem == 1)
-                {
-                    if (Config.embyUsername != "" || Config.embyUserid != "")
-                    {
-                        changeUserBT.Visibility = Visibility.Visible;
-                        loginBT.Visibility = Visibility.Hidden;
-                        usernameTB.Text = Config.embyUsername;
-                        useridTB.Text = Config.embyUserid;
-                    }
-                    else
-                    {
-                        changeUserBT.Visibility = Visibility.Hidden;
-                        loginBT.Visibility = Visibility.Visible;
-                        usernameTB.Text = "-";
-                        useridTB.Text = "-";
-                    }
-                }
-
-            }
         }
     }
 }
