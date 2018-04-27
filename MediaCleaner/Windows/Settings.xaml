@@ -1,0 +1,45 @@
+﻿<Window x:Class="MediaCleaner.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCleaner"
+        mc:Ignorable="d"
+        Title="Settings" Height="335" Width="525"
+        WindowStartupLocation="CenterScreen" >
+    <Grid Margin="0,0,0,0">
+        <Grid HorizontalAlignment="Left" Height="284" Margin="10,10,0,0" VerticalAlignment="Top" Width="166">
+            <Label Content="ApiKey (sonarr)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,0,0,0"/>
+            <Label Content="Minimum Hours to keep" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,31,0,0"/>
+            <Label Content="Minimum Episodes to keep" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,62,0,0"/>
+            <Label Content="Interval (minutes)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,93,0,0"/>
+            <Label x:Name="username_emby_label" Content="Username (emby)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,155,0,0"/>
+            <Label x:Name="username_plex_label" Content="Username (Plex)" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" RenderTransformOrigin="1.026,0.683" Margin="10,155,0,0"/>
+            <Label x:Name="userid_emby_label" Content="User id (emby)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,186,0,0" />
+            <Label x:Name="userid_plex_label" Content="???? (Plex)" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"  RenderTransformOrigin="1.026,0.683" Margin="10,186,0,0" />
+            <Label Content="Keep favorite Episodes" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,217,0,0" />
+            <Label Content="Media Server" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="10,124,0,0"/>
+            <Label x:Name="keepfavoritenot" Content="Not available with Plex" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Top" RenderTransformOrigin="1.026,0.683" Margin="30,236,0,0" FontSize="8" />
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="284" Margin="181,10,0,0" VerticalAlignment="Top" Width="226">
+            <TextBox x:Name="apikey" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+            <TextBox x:Name="hoursToKeep" HorizontalAlignment="Left" Height="26" Margin="10,31,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="episodesToKeep" HorizontalAlignment="Left" Height="26" Margin="10,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+            <TextBlock x:Name="username" HorizontalAlignment="Left" Margin="10,161,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+            <TextBlock x:Name="userid" HorizontalAlignment="Left" Margin="10,190,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
+            <TextBox x:Name="interval" HorizontalAlignment="Left" Height="26" Margin="10,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+            <CheckBox Content="" x:Name="favoriteEpisodes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="10,217,0,0" Height="26" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <ComboBox x:Name="mediaserver" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="Plex"></ComboBoxItem>
+                <ComboBoxItem Content="Emby"></ComboBoxItem>
+            </ComboBox>
+
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="284" Margin="412,10,0,0" VerticalAlignment="Top" Width="75">
+            <CheckBox Content="Debug" x:Name="debug" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="17,0,0,0"/>
+            <Button Content="Save" RenderTransformOrigin="0.151,0.483" Margin="0,224,0,35" Click="Save" Height="25"/>
+            <Button x:Name="login" Content="Login" HorizontalAlignment="Left" Margin="0,254,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login"/>
+            <Button x:Name="changeUser" Content="Change User" HorizontalAlignment="Left" Margin="0,254,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Click="Login" RenderTransformOrigin="-1.813,0.325"/>
+        </Grid>
+    </Grid>
+</Window>
