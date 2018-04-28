@@ -153,10 +153,16 @@ namespace MediaCleaner
 
             try
             {
-                seriesList = sonarrApi.getSeriesList();
-            } catch (System.Net.WebException exc)
+                sonarrApi.checkConnection();
+            }
+            catch (System.Net.WebException exc)
             {
                 Log.Error(string.Format("Exception: [Sonarr] {0}", exc.Status));
+                error = true;
+            }
+
+            if (!error && !sonarrApi.CheckApikey()) {
+                Log.Error("Sonarr: Unauthorized");
                 error = true;
             }
 
@@ -171,6 +177,8 @@ namespace MediaCleaner
                 dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
                 Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss")));
             }
+
+            seriesList = sonarrApi.getSeriesList();
 
             var fileCounter = 0;
             var deletableCounter = 0;

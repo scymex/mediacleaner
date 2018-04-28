@@ -17,6 +17,19 @@ namespace MediaCleaner.Sonarr
             client = new RestClient(URL_sonarr);
         }
 
+        public bool checkConnection()
+        {
+            var request = new RestRequest("system/status", Method.GET);
+
+            request.RequestFormat = DataFormat.Json;
+            var response = client.Execute(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed)
+                return true;
+            else
+                throw response.ErrorException;
+        }
+
         public bool CheckApikey()
         {
             var request = new RestRequest("system/status", Method.GET);
