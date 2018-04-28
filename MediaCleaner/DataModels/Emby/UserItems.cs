@@ -63,6 +63,7 @@ namespace MediaCleaner.Emby
         public bool HasSubtitles { get; set; }
         public string Container { get; set; }
         public string PremiereDate { get; set; }
+        public string DateCreated { get; set; }
         public List<MediaSource> MediaSources { get; set; }
         public double CommunityRating { get; set; }
         public object RunTimeTicks { get; set; }

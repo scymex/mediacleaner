@@ -70,6 +70,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataModels\EpisodeList.cs" />
+    <Compile Include="DataModels\Season.cs" />
+    <Compile Include="DataModels\Series.cs" />
+    <Compile Include="DataModels\SeriesEpisode.cs" />
+    <Compile Include="FileList.cs" />
     <Compile Include="Helpers\APIHelper.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="DataModels\Emby\AuthenticateByName.cs" />
@@ -77,6 +82,7 @@
     <Compile Include="APIClients\Emby\EmbyApi.cs" />
     <Compile Include="DataModels\Emby\PublicUsers.cs" />
     <Compile Include="DataModels\Emby\UserItems.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="DataModels\MediaServer.cs" />
     <Compile Include="DataModels\Plex\Episode.cs" />

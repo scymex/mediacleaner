@@ -178,87 +178,76 @@ namespace MediaCleaner
                 Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss")));
             }
 
-            seriesList = sonarrApi.getSeriesList();
+            var fileList = new FileList();
+            var episodeList = fileList.getEpisodeListbyOrder(fileList.getEpisodeList());
 
             var fileCounter = 0;
             var deletableCounter = 0;
             var episodeCounter = 0;
 
-            foreach (var series in seriesList)
-            {
-                var asd = new List<Episode>();
-                try
+            for (int i = 0; i < episodeList.Count - 1; i++) {
+                var file = episodeList[i];
+                if (i != 0)
                 {
-                    asd = sonarrApi.getEpisodebySeries(series.id.ToString());
-                }
-                catch (System.Net.WebException exc)
-                {
-                    Log.Error(string.Format("Exception: [Sonarr] {0}", exc.Status));
+                    if (episodeList[i].SeriesName != episodeList[i - 1].SeriesName)
+                        episodeCounter = 0;
                 }
 
-                episodeCounter = 0;
+                bool deletable = false;
+                string not_Deletable = "";
 
-                for (var i = asd.Count - 1; i > 0; i--)
+                if (Math.Round((DateTime.Now - file.dateAdded).TotalHours) > Config.hoursToKeep
+                    && file.Played == true 
+                    && episodeCounter > Config.episodesToKeep - 1)
                 {
-                    var item = asd[i];
-
-
-                    if (item.hasFile == true)
+                    if (Config.favoriteEpisodes)
                     {
-                        Item UserItem;
-
-                        bool deletable = false;
-                        try
+                        if (!file.IsFavorite)
                         {
-                            UserItem = mediaServer.getItem(item);
+                            deletable = true;
+                            deletableCounter++;
                         }
-                        catch (System.Net.WebException exc)
-                        {
-                            Log.Error(string.Format("Exception: [EMBY] {0}", exc.Status));
-                            continue;
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-
-                        if (UserItem == null)
-                        {
-                            Log.Info(string.Format("Couldnt find about for this one in Emby: {0}", item.episodeFile.path));
-                            continue;
-                        }
-
-                        if (Math.Round((DateTime.Now - DateTime.Parse(item.episodeFile.dateAdded)).TotalHours) > Config.hoursToKeep && UserItem.Played == true && episodeCounter > Config.episodesToKeep-1)
-                        {
-                            if (Config.favoriteEpisodes)
-                            {
-                                if (!UserItem.IsFavorite)
-                                {
-                                    deletable = true;
-                                    deletableCounter++;
-                                }
-                            }
-                            else
-                            {
-                                deletable = true;
-                                deletableCounter++;
-                            }
-                        }
-
-                        Log.Info(string.Format("[{0}] - [{1}] [Sonarr file id]: {2}; Watched: {3}; dateAdded: {4}; time between added and now: {5} Hours; Favorite: {6}; Deletable: {7}", UserItem.SeriesName, UserItem.EpisodeTitle, item.episodeFileId, UserItem.Played, item.episodeFile.dateAdded, Math.Round((DateTime.Now - UserItem.dateAdded).TotalHours), UserItem.IsFavorite, deletable));
-
-                        if (!Config.Debug && deletable)
-                        {
-                            Log.Info(string.Format("            Deleted: {0}", item.episodeFile.path));
-                            Log.Deleted(string.Format("Deleted: {0}", item.episodeFile.path));
-                            sonarrApi.deleteEpisodeFile(item.episodeFileId);
-                        }
-
-                        fileCounter++;
-                        if(UserItem.Played)
-                            episodeCounter++;
+                    }
+                    else
+                    {
+                        deletable = true;
+                        deletableCounter++;
                     }
                 }
+
+                if(file.Played == false)
+                    not_Deletable += "Played; ";
+                if(Config.favoriteEpisodes && file.IsFavorite)
+                    not_Deletable += "favoriteEpisode; ";
+                if (episodeCounter < Config.episodesToKeep - 1)
+                    not_Deletable += "episodeCounter; ";
+                if(Math.Round((DateTime.Now - file.dateAdded).TotalHours) < Config.hoursToKeep)
+                    not_Deletable += "hourstoKeep; ";
+
+                Log.Info(string.Format("[{0}] - Season: {1} - Episode: {2} - [{3}]: FilePath: {4}; IsFavorite: {5}; Played: {6}; dateAdded: {7}; now-dateAdded: {8}; deletable: {9}; Reason why its not deletable: {10}",
+                    file.SeriesName,
+                    file.Season,
+                    file.Episode,
+                    file.EpisodeTitle,
+                    file.FilePath,
+                    file.IsFavorite,
+                    file.Played,
+                    file.dateAdded,
+                    Math.Round((DateTime.Now - file.dateAdded).TotalHours),
+                    deletable,
+                    not_Deletable
+                    ));
+
+                if (!Config.Debug && deletable)
+                {
+                    Log.Info(string.Format("File deleted: {0}", file.FilePath));
+                    Log.Deleted(string.Format("Deleted: {0}", file.FilePath));
+                    //sonarrApi.deleteEpisodeFile(item.episodeFileId);
+                }
+
+                fileCounter++;
+                if (file.Played)
+                    episodeCounter++;
             }
 
             Log.Info(string.Format("Files: {0}", fileCounter));

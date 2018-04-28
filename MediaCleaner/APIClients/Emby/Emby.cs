@@ -23,19 +23,22 @@ namespace MediaCleaner.Emby
             return embyAPI.checkConnection();
         }
 
-        public Item getItem(Episode sonarrEpisode)
+        public Item getItem(string episodePath)
         {
             if (UserItemList is null)
                 UserItemList = embyAPI.getUserItems();
 
-            var embyItem = UserItemList.FirstOrDefault(item1 => item1.MediaSources.Any(mediasource => mediasource.Path == sonarrEpisode.episodeFile.path));
+            var embyItem = UserItemList.FirstOrDefault(item1 => item1.MediaSources.Any(mediasource => mediasource.Path == episodePath));
             var UserItem = new Item();
 
+            UserItem.SeriesName = embyItem.SeriesName;
+            UserItem.Season = embyItem.SeasonName;
+            UserItem.Episode = embyItem.IndexNumber.ToString();
+            UserItem.EpisodeTitle = embyItem.Name;
+            UserItem.FilePath = episodePath;
             UserItem.IsFavorite = embyItem.UserData.IsFavorite;
             UserItem.Played = embyItem.UserData.Played;
-            UserItem.dateAdded = DateTime.Parse(sonarrEpisode.episodeFile.dateAdded);
-            UserItem.SeriesName = embyItem.SeriesName;
-            UserItem.EpisodeTitle = embyItem.Name;
+            UserItem.dateAdded = DateTime.Parse(embyItem.DateCreated);
 
             return UserItem;
         }

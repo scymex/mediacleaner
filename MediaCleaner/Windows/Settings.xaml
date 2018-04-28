@@ -38,8 +38,8 @@
                 <!-- labels -->
             </Grid>
             <Grid Margin="185,10,10,10">
-                <TextBox x:Name="apikey" ToolTip="stuff, could even be a custom control, etc" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
-                <TextBox x:Name="sonarr_address" HorizontalAlignment="Left" Height="26" Margin="10,31,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="sonarr_address" ToolTip="stuff, could even be a custom control, etc" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <TextBox x:Name="sonarr_apikey" HorizontalAlignment="Left" Height="26" Margin="10,31,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
                 <!-- actual stuff -->
             </Grid>
         </Grid>
@@ -71,7 +71,7 @@
                 </Grid>
 
                 <Grid Margin="185,40,10,10">
-                    <TextBox x:Name="emby_address" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="emby_address" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
                     <TextBlock x:Name="emby_username" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
                     <TextBlock x:Name="emby_userid" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
                     <Button x:Name="login_emby" Content="Login" HorizontalAlignment="Left" Margin="-170,95,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login_Emby"/>
@@ -89,7 +89,7 @@
                 </Grid>
 
                 <Grid Margin="185,40,10,10">
-                    <TextBox x:Name="plex_address" ToolTip="e.g.: http://127.0.0.1:32400"  HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="plex_address" ToolTip="e.g.: http://127.0.0.1:32400"  HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="214" RenderTransformOrigin="1.124,5.528" VerticalContentAlignment="Center"/>
                     <TextBlock x:Name="plex_username" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
                     <TextBlock x:Name="plex_userid" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" RenderTransformOrigin="2.2,0.594" Height="26"/>
                     <Button x:Name="login_plex" Content="Login" HorizontalAlignment="Left" Margin="-170,95,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="Login_Plex"/>
@@ -117,7 +117,7 @@
             </Grid>
              -->
         </Grid>
-        <Grid HorizontalAlignment="Left" Margin="10,410,0,10" Width="497">
+        <Grid HorizontalAlignment="Left" Margin="10,400,0,10" Width="497">
             <Button Content="Save" RenderTransformOrigin="0.151,0.483" Click="Save" Margin="0,0,0,0"/>
         </Grid>
     </Grid>

@@ -46,7 +46,6 @@ namespace MediaCleaner
         CheckBox favoriteEpisodesCB;
         ComboBox mediaServerCOB;
 
-        EmbyApi embyApi;
         SonarrApi sonarrApi;
         public bool SettingsChanged = false;
 
@@ -64,7 +63,7 @@ namespace MediaCleaner
             plexGrid = (Grid)this.FindName("plex");
             plexAddress = (TextBox)this.FindName("plex_address");
             plexChangeUserBT = (Button)this.FindName("changeUser_plex");
-            plexLoginBT = (Button)this.FindName("login_Plex");
+            plexLoginBT = (Button)this.FindName("login_plex");
             plexUsernameTB = (TextBlock)this.FindName("plex_username");
             plexUserIDTB = (TextBlock)this.FindName("plex_userid");
 
@@ -76,7 +75,7 @@ namespace MediaCleaner
             embyUsernameTB = (TextBlock)this.FindName("emby_username");
             embyUserIDTB = (TextBlock)this.FindName("emby_userid");
 
-            apikeyTB = (TextBox)this.FindName("apikey");
+            apikeyTB = (TextBox)this.FindName("sonarr_apikey");
             hoursToKeepTB = (TextBox)this.FindName("hoursToKeep");
             episodesToKeepTB = (TextBox)this.FindName("episodesToKeep");
             intervalTB = (TextBox)this.FindName("interval");
@@ -85,7 +84,6 @@ namespace MediaCleaner
             favoriteEpisodesCB = (CheckBox)this.FindName("favoriteEpisodes");
             mediaServerCOB = (ComboBox)this.FindName("mediaserver");
 
-            embyApi = new EmbyApi();
             sonarrApi = new SonarrApi();
 
             Initiate();
@@ -130,7 +128,7 @@ namespace MediaCleaner
         private void intitiateEmby()
         {
             emby_username.Text = (Config.EmbyAddress == "") ? "-" : Config.embyUsername;
-            emby_username.Text = (Config.embyUsername == "") ? "-" : Config.embyUsername;
+            emby_userid.Text = (Config.embyUserid == "") ? "-" : Config.embyUserid;
             embyAddress.Text = (Config.EmbyAddress == "") ? "" : Config.EmbyAddress;
 
             if (Config.embyUsername != "" || Config.embyUserid != "" || Config.embyAccessToken != "")
@@ -165,6 +163,7 @@ namespace MediaCleaner
 
         private void Save(object sender, RoutedEventArgs e)
         {
+            Config.SonarrAddress = sonarr_address.Text;
             Config.sonarrAPIKey = apikeyTB.Text;
             Config.hoursToKeep = Int32.Parse(hoursToKeep.Text);
             Config.episodesToKeep = Int32.Parse(episodesToKeepTB.Text);
@@ -178,8 +177,8 @@ namespace MediaCleaner
             // Plex
             Config.PlexAddress = plexAddress.Text;
 
-            if (sonarrApi.CheckApikey() || 
-                Config.episodesToKeep < 0 || 
+            if (sonarrApi.CheckApikey() ||
+                Config.episodesToKeep < 0 ||
                 Config.Interval < 0)
             {
                 SettingsChanged = true;
@@ -193,21 +192,37 @@ namespace MediaCleaner
 
         private void Login_Plex(object sender, RoutedEventArgs e)
         {
-                LoginPlex loginscreen = new LoginPlex("", 0);
-                loginscreen.ShowDialog();
-                if(loginscreen.LoginSuccessful)
-                {
-                    plexUsernameTB.Text = Config.plexUsername;
-                    plexUserIDTB.Text = Config.plexUuid;
-                    SettingsChanged = true;
+            if(plexAddress.Text == "")
+            {
+                MessageBox.Show("You have to give me an Address first!");
+                return;
+            }
 
-                    plexChangeUserBT.Visibility = Visibility.Visible;
-                    plexLoginBT.Visibility = Visibility.Hidden;
-                }
+            Config.PlexAddress = plexAddress.Text;
+
+            LoginPlex loginscreen = new LoginPlex("", 0);
+            loginscreen.ShowDialog();
+            if(loginscreen.LoginSuccessful)
+            {
+                plexUsernameTB.Text = Config.plexUsername;
+                plexUserIDTB.Text = Config.plexUuid;
+                SettingsChanged = true;
+
+                plexChangeUserBT.Visibility = Visibility.Visible;
+                plexLoginBT.Visibility = Visibility.Hidden;
+            }
         }
 
         private void Login_Emby(object sender, RoutedEventArgs e)
         {
+            if (embyAddress.Text == "")
+            {
+                MessageBox.Show("You have to give me an Address first!");
+                return;
+            }
+
+            Config.EmbyAddress = embyAddress.Text;
+
             LoginEmby login = new LoginEmby();
             login.ShowDialog();
             if (login.LoginSuccessful)

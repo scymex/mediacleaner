@@ -36,7 +36,7 @@ namespace MediaCleaner.Emby
 
         public List<UserItem> getUserItems()
         {
-            var request = new RestRequest(string.Format("Users/{0}/Items?recursive=true&IncludeItemTypes=Episode&Fields=MediaSources", Config.embyUserid), Method.GET);
+            var request = new RestRequest(string.Format("Users/{0}/Items?recursive=true&IncludeItemTypes=Episode&Fields=MediaSources,DateCreated", Config.embyUserid), Method.GET);
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-MediaBrowser-Token", Config.embyAccessToken);
             var response = client.Execute(request);

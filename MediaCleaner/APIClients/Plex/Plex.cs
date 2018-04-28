@@ -22,23 +22,26 @@ namespace MediaCleaner.Plex
             return plexAPI.checkConnection();
         }
 
-        public Item getItem(Sonarr.Episode sonarritem)
+        public Item getItem(string episodePath)
         {
             if (UserItemList is null)
                 UserItemList = plexAPI.getUserItems();
 
-            var PlexItem = UserItemList.FirstOrDefault(item1 => item1.Media.Any(sourcelist => sourcelist.Part.Any(source => source.file == sonarritem.episodeFile.path)));
+            var PlexItem = UserItemList.FirstOrDefault(item1 => item1.Media.Any(sourcelist => sourcelist.Part.Any(source => source.file == episodePath)));
             var UserItem = new Item();
 
             var played = false;
             if (PlexItem.viewCount > 0)
                 played = true;
 
+            UserItem.SeriesName = PlexItem.grandparentTitle;
+            UserItem.Season = PlexItem.parentTitle;
+            UserItem.Episode = PlexItem.index.ToString();
+            UserItem.EpisodeTitle = PlexItem.title;
+            UserItem.FilePath = episodePath;
             UserItem.IsFavorite = false;
             UserItem.Played = played;
-            UserItem.dateAdded = DateTime.Parse(sonarritem.episodeFile.dateAdded);
-            UserItem.SeriesName = PlexItem.grandparentTitle;
-            UserItem.EpisodeTitle = PlexItem.title;
+            UserItem.dateAdded = new System.DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(PlexItem.addedAt);
 
             return UserItem;
         }
