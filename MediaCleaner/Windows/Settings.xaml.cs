@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using MediaCleaner.Emby;
-using MediaCleaner.Sonarr;
 
 namespace MediaCleaner
 {
@@ -46,7 +43,6 @@ namespace MediaCleaner
         CheckBox favoriteEpisodesCB;
         ComboBox mediaServerCOB;
 
-        SonarrApi sonarrApi;
         public bool SettingsChanged = false;
 
         public Settings()
@@ -84,18 +80,13 @@ namespace MediaCleaner
             favoriteEpisodesCB = (CheckBox)this.FindName("favoriteEpisodes");
             mediaServerCOB = (ComboBox)this.FindName("mediaserver");
 
-            sonarrApi = new SonarrApi();
-
             Initiate();
         }
 
         private void Initiate()
         {
-            // APikey
-            if (Config.sonarrAPIKey == "")
-                apikeyTB.Text = "";
-            else
-                apikeyTB.Text = Config.sonarrAPIKey;
+            apikeyTB.Text = Config.sonarrAPIKey;
+            sonarr_address.Text = Config.SonarrAddress;
             // Hours to keep
             hoursToKeepTB.Text = Config.hoursToKeep.ToString();
             // Episodes to keep
@@ -163,13 +154,20 @@ namespace MediaCleaner
 
         private void Save(object sender, RoutedEventArgs e)
         {
-            Config.SonarrAddress = sonarr_address.Text;
-            Config.sonarrAPIKey = apikeyTB.Text;
-            Config.hoursToKeep = Int32.Parse(hoursToKeep.Text);
-            Config.episodesToKeep = Int32.Parse(episodesToKeepTB.Text);
-            Config.Interval = Int32.Parse(intervalTB.Text);
-            Config.favoriteEpisodes = favoriteEpisodesCB.IsChecked.HasValue ? true : false;
-            Config.MediaServer = mediaServerCOB.SelectedIndex;
+            if (Int32.Parse(episodesToKeepTB.Text) < 0 ||
+                Int32.Parse(intervalTB.Text) < 0 ||
+                sonarr_address.Text == "" ||
+                Int32.Parse(hoursToKeep.Text) < 0 ||
+                apikeyTB.Text == "" ||
+                (embyAddress.Text == "" && plexAddress.Text == "") )
+            {
+                MessageBox.Show("Some of the settings are not valid!", "Wrong settings!");
+            }
+            else
+            {
+                SettingsChanged = true;
+                this.Close();
+            }
 
             // Emby
             Config.EmbyAddress = embyAddress.Text;
@@ -177,17 +175,13 @@ namespace MediaCleaner
             // Plex
             Config.PlexAddress = plexAddress.Text;
 
-            if (sonarrApi.CheckApikey() ||
-                Config.episodesToKeep < 0 ||
-                Config.Interval < 0)
-            {
-                SettingsChanged = true;
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Some of the settings are not valid!", "Wrong settings!");
-            }
+            Config.SonarrAddress = sonarr_address.Text;
+            Config.sonarrAPIKey = apikeyTB.Text;
+            Config.hoursToKeep = Int32.Parse(hoursToKeep.Text);
+            Config.episodesToKeep = Int32.Parse(episodesToKeepTB.Text);
+            Config.Interval = Int32.Parse(intervalTB.Text);
+            Config.favoriteEpisodes = favoriteEpisodesCB.IsChecked.HasValue ? true : false;
+            Config.MediaServer = mediaServerCOB.SelectedIndex;
         }
 
         private void Login_Plex(object sender, RoutedEventArgs e)

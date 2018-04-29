@@ -8,7 +8,7 @@ namespace MediaCleaner.Sonarr
     class SonarrApi
     {
         // SONARR
-        string URL_sonarr = "http://192.168.1.214:8989/api";
+        string URL_sonarr = Config.SonarrAddress + "/api";
         RestClient client;
         JsonDeserializer deserialCount = new JsonDeserializer();
 
@@ -45,7 +45,7 @@ namespace MediaCleaner.Sonarr
                 return false;
         }
 
-        public List<Episode> getEpisodebySeries(string seriesId)
+        public List<SonarrEpisode> getEpisodebySeries(string seriesId)
         {
             var request = new RestRequest("Episode", Method.GET);
 
@@ -56,7 +56,7 @@ namespace MediaCleaner.Sonarr
             var response = client.Execute(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                return deserialCount.Deserialize<List<Episode>>(response);
+                return deserialCount.Deserialize<List<SonarrEpisode>>(response);
             else
                 throw response.ErrorException;
         }

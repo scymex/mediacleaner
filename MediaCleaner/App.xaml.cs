@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
@@ -8,7 +7,6 @@ using NotifyIcon = System.Windows.Forms.NotifyIcon;
 using ContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
 using ToolStripMenuItem = System.Windows.Forms.ToolStripMenuItem;
 using System.Collections.Generic;
-using MediaCleaner.Emby;
 using System.Threading.Tasks;
 using MediaCleaner.Sonarr;
 
@@ -18,16 +16,13 @@ namespace MediaCleaner
     {
         public static NotifyIcon notifyIcon;
         ContextMenuStrip contextMenu;
-        public ToolStripMenuItem openMonitor;
+        ToolStripMenuItem runCleaningNow;
+        ToolStripMenuItem openSettings;
         ToolStripMenuItem exitApplication;
         DispatcherTimer dispatcherTimer;
-        SonarrApi sonarrApi;
 
         protected override void OnStartup(StartupEventArgs e)
         {
-
-            sonarrApi = new SonarrApi();
-
             Log.Info("APP is running.");
 
             App.notifyIcon = new NotifyIcon();
@@ -41,14 +36,19 @@ namespace MediaCleaner
             notifyIcon.Visible = true;
 
             contextMenu = new ContextMenuStrip();
-            openMonitor = new ToolStripMenuItem();
+            runCleaningNow = new ToolStripMenuItem();
+            openSettings = new ToolStripMenuItem();
             exitApplication = new ToolStripMenuItem();
 
             notifyIcon.ContextMenuStrip = contextMenu;
 
-            openMonitor.Text = "Settings";
-            openMonitor.Click += new EventHandler(OpenSettings);
-            contextMenu.Items.Add(openMonitor);
+            runCleaningNow.Text = "Run a cleaning phase now";
+            runCleaningNow.Click += new EventHandler(RunCleaningNow);
+            contextMenu.Items.Add(runCleaningNow);
+
+            openSettings.Text = "Settings";
+            openSettings.Click += new EventHandler(OpenSettings);
+            contextMenu.Items.Add(openSettings);
 
             exitApplication.Text = "Exit";
             exitApplication.Click += new EventHandler(ShutdownApp);
@@ -80,7 +80,7 @@ namespace MediaCleaner
             }
 
             if (Config.sonarrAPIKey == "" || Config.episodesToKeep < 0 ||
-                Config.Interval < 0)
+                Config.Interval < 0 || Config.SonarrAddress == "")
             {
                 return false;
             }
@@ -134,17 +134,15 @@ namespace MediaCleaner
 
             var seriesList = new List<Series>();
             var error = false;
-            MediaServer mediaServer;
-            if (Config.MediaServer == 1)
-                mediaServer = new Emby.Emby();
-            else if (Config.MediaServer == 0)
-                mediaServer = new Plex.Plex();
-            else
-                return;
+
+            SonarrApi sonarrApi = new SonarrApi();
+
+            MediaServer mServer;
+            mServer = new MediaServer();
 
             try
             {
-                mediaServer.checkConnection();
+                mServer.checkConnection();
             } catch (System.Net.WebException exc)
             {
                 Log.Error(string.Format("Exception: [MediaServer] {0}", exc.Status));
@@ -178,7 +176,7 @@ namespace MediaCleaner
                 Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss")));
             }
 
-            var fileList = new FileList();
+            var fileList = new FileList(sonarrApi, mServer);
             var episodeList = fileList.getEpisodeListbyOrder(fileList.getEpisodeList());
 
             var fileCounter = 0;
@@ -226,8 +224,8 @@ namespace MediaCleaner
 
                 Log.Info(string.Format("[{0}] - Season: {1} - Episode: {2} - [{3}]: FilePath: {4}; IsFavorite: {5}; Played: {6}; dateAdded: {7}; now-dateAdded: {8}; deletable: {9}; Reason why its not deletable: {10}",
                     file.SeriesName,
-                    file.Season,
-                    file.Episode,
+                    file.SeasonNumber,
+                    file.EpisodeNumber,
                     file.EpisodeTitle,
                     file.FilePath,
                     file.IsFavorite,
@@ -293,6 +291,11 @@ namespace MediaCleaner
         {
             notifyIcon.Dispose();
             Current.Shutdown();
+        }
+
+        private void RunCleaningNow(Object sender, EventArgs e)
+        {
+            TheBigThing();
         }
     }
 }

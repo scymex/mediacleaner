@@ -37,6 +37,7 @@ namespace MediaCleaner
             using (StreamWriter sw = File.AppendText(file))
             {
                 sw.WriteLine(string.Format("[{0}] [{1}] {2}", DateTime.Now.ToString("yy/MM/dd H:mm:ss"), type, text));
+                System.Diagnostics.Debug.WriteLine(string.Format("[{0}] [{1}] {2}", DateTime.Now.ToString("yy/MM/dd H:mm:ss"), type, text));
             }
         }
     }

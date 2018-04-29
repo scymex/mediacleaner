@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using MediaCleaner.Emby;
-using MediaCleaner.Plex;
 
 namespace MediaCleaner
 {

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediaCleaner.Sonarr;
 
 namespace MediaCleaner.Plex
 {
-    class Plex : MediaServer
+    class Plex : IMediaServer
     {
         PlexApi plexAPI;
         List<Episode> UserItemList;
@@ -22,21 +18,21 @@ namespace MediaCleaner.Plex
             return plexAPI.checkConnection();
         }
 
-        public Item getItem(string episodePath)
+        public DataModels.Episode getItem(string episodePath)
         {
             if (UserItemList is null)
                 UserItemList = plexAPI.getUserItems();
 
             var PlexItem = UserItemList.FirstOrDefault(item1 => item1.Media.Any(sourcelist => sourcelist.Part.Any(source => source.file == episodePath)));
-            var UserItem = new Item();
+            var UserItem = new DataModels.Episode();
 
             var played = false;
             if (PlexItem.viewCount > 0)
                 played = true;
 
             UserItem.SeriesName = PlexItem.grandparentTitle;
-            UserItem.Season = PlexItem.parentTitle;
-            UserItem.Episode = PlexItem.index.ToString();
+            UserItem.SeasonNumber = PlexItem.parentTitle;
+            UserItem.EpisodeNumber = PlexItem.index.ToString();
             UserItem.EpisodeTitle = PlexItem.title;
             UserItem.FilePath = episodePath;
             UserItem.IsFavorite = false;

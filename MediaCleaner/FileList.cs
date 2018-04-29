@@ -1,15 +1,5 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Threading;
-using NotifyIcon = System.Windows.Forms.NotifyIcon;
-using ContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
-using ToolStripMenuItem = System.Windows.Forms.ToolStripMenuItem;
+﻿using System.Linq;
 using System.Collections.Generic;
-using MediaCleaner.Emby;
-using System.Threading.Tasks;
 using MediaCleaner.Sonarr;
 using MediaCleaner.DataModels;
 
@@ -21,25 +11,16 @@ namespace MediaCleaner
         SonarrApi sonarrApi;
         MediaServer mServer;
 
-        public FileList()
+        public FileList(SonarrApi sonarrApi_, MediaServer mServer_)
         {
-            sonarrApi = new SonarrApi();
-
-            switch(Config.MediaServer)
-            {
-                case 0:
-                    mServer = new Plex.Plex();
-                    break;
-                case 1:
-                    mServer = new Emby.Emby();
-                    break;
-            }
+            sonarrApi = sonarrApi_;
+            mServer = mServer_;
         }
 
-        public List<Item> getEpisodeList ()
+        public List<Episode> getEpisodeList ()
         {
             var fileList = getFileList();
-            var episodeList = new List<Item>();
+            var episodeList = new List<Episode>();
 
             foreach(string filePath in fileList)
             {
@@ -56,9 +37,9 @@ namespace MediaCleaner
             return episodeList;
         }
 
-        public List<Item> getEpisodeListbyOrder(List<Item> episodeList)
+        public List<Episode> getEpisodeListbyOrder(List<Episode> episodeList)
         {
-            episodeList.OrderBy(episode => episode.SeriesName).ThenBy(episode => episode.Season).ThenBy(episode => episode.Episode);
+            episodeList.OrderBy(episode => episode.SeriesName).ThenBy(episode => episode.SeasonNumber).ThenBy(episode => episode.EpisodeNumber);
 
             return episodeList;
         }
@@ -72,12 +53,12 @@ namespace MediaCleaner
             // get file list by sonarr
             var fileList = new List<string>();
 
-            var seriesList = new List<Sonarr.Series>();
+            var seriesList = new List<Series>();
             seriesList = sonarrApi.getSeriesList();
 
             foreach (var series in seriesList)
             {
-                var EpisodeList = new List<Episode>();
+                var EpisodeList = new List<SonarrEpisode>();
                 EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
 
                 for (var i = EpisodeList.Count - 1; i >= 0; i--)
