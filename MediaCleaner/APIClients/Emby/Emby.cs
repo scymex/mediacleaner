@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using MediaCleaner.DataModels;
 
 namespace MediaCleaner.Emby
@@ -30,8 +31,8 @@ namespace MediaCleaner.Emby
             var UserItem = new Episode();
 
             UserItem.SeriesName = embyItem.SeriesName;
-            UserItem.SeasonNumber = embyItem.SeasonName;
-            UserItem.EpisodeNumber = embyItem.IndexNumber.ToString();
+            try { UserItem.SeasonNumber = Int32.Parse(Regex.Replace(embyItem.SeasonName, "[^0-9]+", string.Empty)); } catch { UserItem.SeasonNumber = 0; }
+            UserItem.EpisodeNumber = embyItem.IndexNumber;
             UserItem.EpisodeTitle = embyItem.Name;
             UserItem.FilePath = episodePath;
             UserItem.IsFavorite = embyItem.UserData.IsFavorite;

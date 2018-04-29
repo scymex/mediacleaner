@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MediaCleaner.Plex
 {
@@ -31,8 +33,8 @@ namespace MediaCleaner.Plex
                 played = true;
 
             UserItem.SeriesName = PlexItem.grandparentTitle;
-            UserItem.SeasonNumber = PlexItem.parentTitle;
-            UserItem.EpisodeNumber = PlexItem.index.ToString();
+            try { UserItem.SeasonNumber = Int32.Parse(Regex.Replace(PlexItem.parentTitle, "[^0-9]+", string.Empty)); } catch { UserItem.SeasonNumber = 0; }
+            UserItem.EpisodeNumber = PlexItem.index;
             UserItem.EpisodeTitle = PlexItem.title;
             UserItem.FilePath = episodePath;
             UserItem.IsFavorite = false;
