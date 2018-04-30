@@ -252,7 +252,7 @@ namespace MediaCleaner
 
         private void start()
         {
-            notifyIcon.Text = "Sonarr - Emby Cleaner";
+            notifyIcon.Text = "MediaCleaner";
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
             {
