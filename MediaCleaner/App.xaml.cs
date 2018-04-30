@@ -25,7 +25,16 @@ namespace MediaCleaner
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Log.Info("APP is running.");
+            foreach (string arg in e.Args)
+            {
+                if (arg == "/debug")
+                    Config.Debug = true;
+            }
+
+            if(Config.Debug)
+                Log.Info("APP is running and its in debug mode.");
+            else
+                Log.Info("APP is running.");
 
             mServer = new MediaServer();
             sonarrApi = new SonarrApi();
@@ -58,8 +67,6 @@ namespace MediaCleaner
             exitApplication.Text = "Exit";
             exitApplication.Click += new EventHandler(ShutdownApp);
             contextMenu.Items.Add(exitApplication);
-
-            Config.Debug = false;
 
             if(checkSettings())
             {

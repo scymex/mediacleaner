@@ -133,7 +133,7 @@ namespace MediaCleaner
         {
             plex_username.Text = (Config.plexUsername == "") ? "-" : Config.plexUsername;
             plex_userid.Text = (Config.plexUuid == "") ? "-" : Config.plexUuid;
-            plexAddress.Text = (Config.EmbyAddress == "") ? "" : Config.PlexAddress;
+            plexAddress.Text = (Config.PlexAddress == "") ? "" : Config.PlexAddress;
 
             if (Config.embyUsername != "" || Config.embyUserid != "" || Config.plexAccessToken != "")
             {
