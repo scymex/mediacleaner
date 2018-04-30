@@ -233,11 +233,14 @@ namespace MediaCleaner
                     not_Deletable
                     ));
 
-                if (!Config.Debug && deletable)
+                if (deletable)
                 {
                     Log.Info(string.Format("File deleted: {0}", file.FilePath));
                     Log.Deleted(string.Format("Deleted: {0}", file.FilePath));
-                    //fileHandler.deleteFile(file.FilePath);
+                    if (!Config.Debug)
+                    {
+                        //fileHandler.deleteFile(file.FilePath);
+                    }
                 }
 
                 fileCounter++;
