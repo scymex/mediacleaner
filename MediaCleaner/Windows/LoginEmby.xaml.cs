@@ -33,12 +33,12 @@ namespace MediaCleaner
 
     public partial class LoginEmby : Window
     {
-        EmbyApi embyApi;
+        EmbyClient embyApi;
         public bool LoginSuccessful;
         public LoginEmby()
         {
             InitializeComponent();
-            embyApi = new EmbyApi();
+            embyApi = new EmbyClient();
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
             {

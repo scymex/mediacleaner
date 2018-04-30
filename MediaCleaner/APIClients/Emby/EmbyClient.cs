@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MediaCleaner.Emby
 {
-    class EmbyApi
+    class EmbyClient
     {
         // EMBY
         string URL_emby = Config.EmbyAddress;
@@ -12,7 +12,7 @@ namespace MediaCleaner.Emby
 
         JsonDeserializer deserialCount = new JsonDeserializer();
 
-        public EmbyApi()
+        public EmbyClient()
         {
             client = new RestClient(URL_emby);
         }

@@ -29,5 +29,10 @@ namespace MediaCleaner
         {
             return mServer.getItem(EpisodePath);
         }
+
+        public bool checkSettings()
+        {
+            return mServer.checkSettings();
+        }
     }
 }

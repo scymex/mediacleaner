@@ -11,5 +11,6 @@ namespace MediaCleaner
     {
         Episode getItem(string EpisodePath);
         bool checkConnection();
+        bool checkSettings();
     }
 }

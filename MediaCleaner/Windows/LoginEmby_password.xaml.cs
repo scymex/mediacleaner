@@ -11,7 +11,7 @@ namespace MediaCleaner
     /// </summary>
     public partial class LoginEmby_password : Window
     {
-        EmbyApi embyApi;
+        EmbyClient embyApi;
         TextBox usernameTB;
         PasswordBox passwordTB;
         TextBlock wrongpw;
@@ -21,7 +21,7 @@ namespace MediaCleaner
         public LoginEmby_password(string username)
         {
             InitializeComponent();
-            embyApi = new EmbyApi();
+            embyApi = new EmbyClient();
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
             {

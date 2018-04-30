@@ -20,10 +20,15 @@ namespace MediaCleaner
         ToolStripMenuItem openSettings;
         ToolStripMenuItem exitApplication;
         DispatcherTimer dispatcherTimer;
+        MediaServer mServer;
+        SonarrApi sonarrApi;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             Log.Info("APP is running.");
+
+            mServer = new MediaServer();
+            sonarrApi = new SonarrApi();
 
             App.notifyIcon = new NotifyIcon();
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_stopped.ico"))
@@ -56,7 +61,7 @@ namespace MediaCleaner
 
             Config.Debug = false;
 
-            if(validateSettings())
+            if(checkSettings())
             {
                 start();
             }
@@ -66,28 +71,18 @@ namespace MediaCleaner
             }
         }
 
-        private bool validateSettings()
+        private bool checkSettings()
         {
-            if(Config.MediaServer == 0)
-            {
-                if (Config.plexUsername == "" || Config.plexUuid == "" || Config.plexAccessToken == "")
-                    return false;
-            }
-            else if(Config.MediaServer == 1)
-            {
-                if (Config.embyUsername == "" || Config.embyUserid == "" || Config.embyAccessToken == "")
-                    return false;
-            }
-
-            if (Config.sonarrAPIKey == "" || Config.episodesToKeep < 0 ||
-                Config.Interval < 0 || Config.SonarrAddress == "")
-            {
+            if (!mServer.checkSettings())
                 return false;
-            }
-            else
-            {
-                return true;
-            }
+
+            if (!sonarrApi.checkSettings())
+                return false;
+
+            if (Config.episodesToKeep < 0 || Config.Interval < 0)
+                return false;
+
+            return true;
         }
 
         private void wrongSettings()
@@ -96,7 +91,7 @@ namespace MediaCleaner
 
             Settings settings = new Settings();
             settings.ShowDialog();
-            if (settings.SettingsChanged && validateSettings())
+            if (settings.SettingsChanged && checkSettings())
             {
                 start();
                 settings.SettingsChanged = false;
@@ -135,11 +130,6 @@ namespace MediaCleaner
             var seriesList = new List<Series>();
             var error = false;
 
-            SonarrApi sonarrApi = new SonarrApi();
-
-            MediaServer mServer;
-            mServer = new MediaServer();
-
             try
             {
                 mServer.checkConnection();
@@ -176,8 +166,8 @@ namespace MediaCleaner
                 Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss")));
             }
 
-            var fileList = new FileList(sonarrApi, mServer);
-            var episodeList = fileList.getEpisodeListbyOrder(fileList.getEpisodeList());
+            var fileHandler = new FileHandler(sonarrApi, mServer);
+            var episodeList = fileHandler.getEpisodeListbyOrder(fileHandler.getEpisodeList());
 
             var fileCounter = 0;
             var deletableCounter = 0;
@@ -240,7 +230,7 @@ namespace MediaCleaner
                 {
                     Log.Info(string.Format("File deleted: {0}", file.FilePath));
                     Log.Deleted(string.Format("Deleted: {0}", file.FilePath));
-                    //sonarrApi.deleteEpisodeFile(item.episodeFileId);
+                    //fileHandler.deleteFile(file.FilePath);
                 }
 
                 fileCounter++;
@@ -295,7 +285,7 @@ namespace MediaCleaner
 
         private void RunCleaningNow(Object sender, EventArgs e)
         {
-            TheBigThing();
+            Task task = Task.Run((Action)TheBigThing);
         }
     }
 }

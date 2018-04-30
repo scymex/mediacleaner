@@ -6,13 +6,13 @@ using RestSharp.Deserializers;
 
 namespace MediaCleaner.Plex
 {
-    class PlexApi
+    class PlexClient
     {
         RestClient client;
         JsonDeserializer deserialCount = new JsonDeserializer();
         string URL_plex = Config.PlexAddress;
 
-        public PlexApi()
+        public PlexClient()
         {
             client = new RestClient(URL_plex);
         }

@@ -30,6 +30,16 @@ namespace MediaCleaner.Sonarr
                 throw response.ErrorException;
         }
 
+        public bool checkSettings()
+        {
+            if (Config.sonarrAPIKey == "" || Config.SonarrAddress == "")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public bool CheckApikey()
         {
             var request = new RestRequest("system/status", Method.GET);

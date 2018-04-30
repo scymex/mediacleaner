@@ -12,8 +12,8 @@ namespace MediaCleaner
     /// </summary>
     public partial class LoginPlex : Window
     {
-        EmbyApi embyApi;
-        PlexApi plexApi;
+        EmbyClient embyApi;
+        PlexClient plexApi;
         TextBox usernameTB;
         PasswordBox passwordTB;
         TextBlock wrongpw;
@@ -26,9 +26,9 @@ namespace MediaCleaner
             InitializeComponent();
             mediaserver = mediaserver_;
             if(mediaserver == 0)
-                plexApi = new PlexApi();
+                plexApi = new PlexClient();
             else if(mediaserver == 1)
-                embyApi = new EmbyApi();
+                embyApi = new EmbyClient();
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
             {

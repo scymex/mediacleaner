@@ -86,12 +86,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataModels\Episode.cs" />
-    <Compile Include="FileList.cs" />
+    <Compile Include="FileHandler.cs" />
     <Compile Include="Helpers\APIHelper.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="DataModels\Emby\AuthenticateByName.cs" />
-    <Compile Include="APIClients\Emby\Emby.cs" />
-    <Compile Include="APIClients\Emby\EmbyApi.cs" />
+    <Compile Include="MediaServers\Emby.cs" />
+    <Compile Include="APIClients\Emby\EmbyClient.cs" />
     <Compile Include="DataModels\Emby\PublicUsers.cs" />
     <Compile Include="DataModels\Emby\UserItems.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
@@ -99,8 +99,8 @@
     <Compile Include="Interfaces\IMediaServer.cs" />
     <Compile Include="MediaServer.cs" />
     <Compile Include="DataModels\Plex\Episode.cs" />
-    <Compile Include="APIClients\Plex\Plex.cs" />
-    <Compile Include="APIClients\Plex\PlexApi.cs" />
+    <Compile Include="MediaServers\Plex.cs" />
+    <Compile Include="APIClients\Plex\PlexClient.cs" />
     <Compile Include="DataModels\Plex\Season.cs" />
     <Compile Include="DataModels\Plex\Section.cs" />
     <Compile Include="DataModels\Plex\Show.cs" />

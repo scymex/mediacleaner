@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using MediaCleaner.Sonarr;
 using MediaCleaner.DataModels;
+using System;
 
 namespace MediaCleaner
 {
-    class FileList
+    class FileHandler
     {
 
         SonarrApi sonarrApi;
         MediaServer mServer;
 
-        public FileList(SonarrApi sonarrApi_, MediaServer mServer_)
+        public FileHandler(SonarrApi sonarrApi_, MediaServer mServer_)
         {
             sonarrApi = sonarrApi_;
             mServer = mServer_;
@@ -42,6 +43,43 @@ namespace MediaCleaner
             episodeList.OrderBy(episode => episode.SeriesName).ThenBy(episode => episode.SeasonNumber).ThenBy(episode => episode.EpisodeNumber);
 
             return episodeList;
+        }
+
+        public bool deleteFile(string filePath)
+        {
+            // ????????? 
+
+            var seriesList = new List<Series>();
+            seriesList = sonarrApi.getSeriesList();
+
+            foreach (var series in seriesList)
+            {
+                var EpisodeList = new List<SonarrEpisode>();
+                EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
+
+                for (var i = EpisodeList.Count - 1; i >= 0; i--)
+                {
+                    var episode = EpisodeList[i];
+
+                    if (episode.hasFile == true)
+                    {
+                        if (episode.episodeFile.path == filePath)
+                            try
+                            {
+                                sonarrApi.deleteEpisodeFile(episode.episodeFileId);
+                                return true;
+                            } catch (Exception ex)
+                            {
+                                Log.Error(string.Format("There was an error deleting \"{0}\" Exception: {1}", filePath, ex.Message));
+                                return false;
+                            }
+                    }
+                }
+            }
+
+            Log.Error(string.Format("There was an error while deleting the file: Can't find this file: \"{0}\"", filePath));
+
+            return false;
         }
 
         public List<string> getFileList()

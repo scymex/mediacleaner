@@ -7,17 +7,25 @@ namespace MediaCleaner.Plex
 {
     class Plex : IMediaServer
     {
-        PlexApi plexAPI;
+        PlexClient plexAPI;
         List<Episode> UserItemList;
 
 
         public Plex ()
         {
-            plexAPI = new PlexApi();
+            plexAPI = new PlexClient();
         }
         public bool checkConnection()
         {
             return plexAPI.checkConnection();
+        }
+
+        public bool checkSettings()
+        {
+            if (Config.plexUsername == "" || Config.plexUuid == "" || Config.plexAccessToken == "" || Config.PlexAddress == "")
+                return false;
+
+            return true;
         }
 
         public DataModels.Episode getItem(string episodePath)

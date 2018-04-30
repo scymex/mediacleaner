@@ -8,18 +8,26 @@ namespace MediaCleaner.Emby
 {
     class Emby : IMediaServer
     {
-        EmbyApi embyAPI;
+        EmbyClient embyAPI;
         List<UserItem> UserItemList;
 
         public Emby ()
         {
-            embyAPI = new EmbyApi();
+            embyAPI = new EmbyClient();
         }
 
 
         public bool checkConnection()
         {
             return embyAPI.checkConnection();
+        }
+
+        public bool checkSettings()
+        {
+            if (Config.embyUsername == "" || Config.embyUserid == "" || Config.embyAccessToken == "" || Config.EmbyAddress == "")
+                return false;
+
+            return true;
         }
 
         public Episode getItem(string episodePath)
