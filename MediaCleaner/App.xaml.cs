@@ -239,7 +239,7 @@ namespace MediaCleaner
                     Log.Deleted(string.Format("Deleted: {0}", file.FilePath));
                     if (!Config.Debug)
                     {
-                        //fileHandler.deleteFile(file.FilePath);
+                        fileHandler.deleteFile(file.FilePath);
                     }
                 }
 
@@ -267,6 +267,7 @@ namespace MediaCleaner
             dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
             dispatcherTimer.Start();
             Task task = Task.Run((Action)TheBigThing);
+            Log.Info("A Cleaning phase just started.");
         }
 
         private void stop()
