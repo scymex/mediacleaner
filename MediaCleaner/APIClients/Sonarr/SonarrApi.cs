@@ -24,6 +24,8 @@ namespace MediaCleaner.Sonarr
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
+            Log.Debug(string.Format("Sonarr response checkconnection: {0}",response.Content));
+
             if (response.ResponseStatus == ResponseStatus.Completed)
                 return true;
             else
@@ -48,6 +50,8 @@ namespace MediaCleaner.Sonarr
 
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
+
+            Log.Debug(string.Format("Sonarr response checkApikey: {0}", response.Content));
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;

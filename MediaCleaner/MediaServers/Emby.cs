@@ -36,6 +36,10 @@ namespace MediaCleaner.Emby
                 UserItemList = embyAPI.getUserItems();
 
             var embyItem = UserItemList.FirstOrDefault(item1 => item1.MediaSources.Any(mediasource => mediasource.Path == episodePath));
+
+            if (embyItem == null)
+                return null;
+
             var UserItem = new Episode();
 
             UserItem.SeriesName = embyItem.SeriesName;

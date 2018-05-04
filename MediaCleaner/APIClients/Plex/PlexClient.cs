@@ -36,6 +36,8 @@ namespace MediaCleaner.Plex
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             var response = client.Execute(request);
 
+            Log.Debug(string.Format("Plex response checkconnection: {0}", response.Content));
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
             else

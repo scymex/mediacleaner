@@ -26,6 +26,7 @@ namespace MediaCleaner
             foreach(string filePath in fileList)
             {
                 var episode = mServer.getItem(filePath);
+
                 if (episode == null)
                 {
                     Log.Info(string.Format("Can't find this file in the mediaserver: {0}", filePath));

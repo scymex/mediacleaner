@@ -24,6 +24,8 @@ namespace MediaCleaner.Emby
             request.AddHeader("X-MediaBrowser-Token", Config.embyAccessToken);
             var response = client.Execute(request);
 
+            Log.Debug(string.Format("Emby response checkconnection: {0}", response.Content));
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
             else

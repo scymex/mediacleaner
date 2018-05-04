@@ -34,6 +34,10 @@ namespace MediaCleaner.Plex
                 UserItemList = plexAPI.getUserItems();
 
             var PlexItem = UserItemList.FirstOrDefault(item1 => item1.Media.Any(sourcelist => sourcelist.Part.Any(source => source.file == episodePath)));
+
+            if (PlexItem == null)
+                return null;
+
             var UserItem = new DataModels.Episode();
 
             var played = false;

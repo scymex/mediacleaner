@@ -24,12 +24,13 @@ namespace MediaCleaner
 
         public static void Debug(string text)
         {
-            newLog("Debug", text, LogFile);
+            if(Config.Debug)
+                newLog("Debug", text, LogFile);
         }
 
         public static void Deleted(string text)
         {
-            newLog("Debug", text, DeletedLogFile);
+            newLog("FileDelete", text, DeletedLogFile);
         }
 
         private static void newLog(string type, string text, string file)

@@ -31,10 +31,8 @@ namespace MediaCleaner
                     Config.Debug = true;
             }
 
-            if(Config.Debug)
-                Log.Info("APP is running and its in debug mode.");
-            else
-                Log.Info("APP is running.");
+            Log.Info("The application is running.");
+            Log.Debug("The application is running in debug mode.");
 
             mServer = new MediaServer();
             sonarrApi = new SonarrApi();
@@ -115,24 +113,21 @@ namespace MediaCleaner
 
         private void TheBigThing ()
         {
-            if (Config.Debug)
-            {
-                Log.Debug("| Debugging is ON!");
-                Log.Debug("| SETTINGS:");
-                Log.Debug(string.Format("|    Emby Username:                    {0}", Config.embyUsername));
-                Log.Debug(string.Format("|    Emby User ID:                     {0}", Config.embyUserid));
-                Log.Debug(string.Format("|    Emby Access Token:                {0}", Config.embyAccessToken));
-                Log.Debug(string.Format("|    Plex Username:                    {0}", Config.plexUsername));
-                Log.Debug(string.Format("|    Plex Uuid:                        {0}", Config.plexUuid));
-                Log.Debug(string.Format("|    Plex Access Token:                {0}", Config.plexAccessToken));
-                Log.Debug(string.Format("|    MediaServer Type id:              {0}", Config.MediaServer));
-                Log.Debug(string.Format("|    Emby Access Token:                {0}", Config.embyAccessToken));
-                Log.Debug(string.Format("|    Sonarr API key:                   {0}", Config.sonarrAPIKey));
-                Log.Debug(string.Format("|    Interval:                         {0}", Config.Interval));
-                Log.Debug(string.Format("|    Minimum hours to keep:            {0}", Config.hoursToKeep));
-                Log.Debug(string.Format("|    Minimum episode quantity to keep: {0}", Config.episodesToKeep));
-                Log.Debug(string.Format("|    Keep favorite episodes:           {0}", Config.embyUsername));
-            }
+            Log.Debug("| Debugging is ON!");
+            Log.Debug("| SETTINGS:");
+            Log.Debug(string.Format("|    Emby Username:                    {0}", Config.embyUsername));
+            Log.Debug(string.Format("|    Emby User ID:                     {0}", Config.embyUserid));
+            Log.Debug(string.Format("|    Emby Access Token:                {0}", Config.embyAccessToken));
+            Log.Debug(string.Format("|    Plex Username:                    {0}", Config.plexUsername));
+            Log.Debug(string.Format("|    Plex Uuid:                        {0}", Config.plexUuid));
+            Log.Debug(string.Format("|    Plex Access Token:                {0}", Config.plexAccessToken));
+            Log.Debug(string.Format("|    MediaServer Type id:              {0}", Config.MediaServer));
+            Log.Debug(string.Format("|    Emby Access Token:                {0}", Config.embyAccessToken));
+            Log.Debug(string.Format("|    Sonarr API key:                   {0}", Config.sonarrAPIKey));
+            Log.Debug(string.Format("|    Interval:                         {0}", Config.Interval));
+            Log.Debug(string.Format("|    Minimum hours to keep:            {0}", Config.hoursToKeep));
+            Log.Debug(string.Format("|    Minimum episode quantity to keep: {0}", Config.episodesToKeep));
+            Log.Debug(string.Format("|    Keep favorite episodes:           {0}", Config.embyUsername));
 
             var seriesList = new List<Series>();
             var error = false;
@@ -172,7 +167,6 @@ namespace MediaCleaner
                 dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
                 Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss")));
             }
-
             var fileHandler = new FileHandler(sonarrApi, mServer);
             var episodeList = fileHandler.getEpisodeListbyOrder(fileHandler.getEpisodeList());
 
@@ -279,11 +273,16 @@ namespace MediaCleaner
 
         private void OpenSettings(Object sender, EventArgs e)
         {
+            var preSettingsInterval = Config.Interval;
             Settings settings = new Settings();
             settings.ShowDialog();
             if(settings.SettingsChanged)
             {
-                dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
+                if(preSettingsInterval != Config.Interval)
+                {
+                    dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
+                    Log.Debug(string.Format("Some of the settings are changed, including the interval. New interval: {0}", Config.Interval));
+                }
                 settings.SettingsChanged = false;
             }
         }
