@@ -90,7 +90,6 @@ namespace MediaCleaner
                 if (login.LoginSuccessful == true)
                 {
                     LoginSuccessful = true;
-                    Log.Info("Successful login!");
                     this.Close();
                 }
 
@@ -103,7 +102,6 @@ namespace MediaCleaner
                 {
                     Config.embyAccessToken = embyaccesstoken;
                     LoginSuccessful = true;
-                    Log.Info("Successful login!");
                     this.Close();
                 }
             }

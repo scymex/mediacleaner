@@ -34,6 +34,7 @@ namespace MediaCleaner.Sonarr
 
         public bool checkSettings()
         {
+            Log.Debug(string.Format("[Sonarr:] API key: \"{0}\"; Address: \"{1}\";", Config.sonarrAPIKey, Config.SonarrAddress));
             if (Config.sonarrAPIKey == "" || Config.SonarrAddress == "")
             {
                 return false;

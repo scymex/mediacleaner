@@ -113,21 +113,10 @@ namespace MediaCleaner
 
         private void TheBigThing ()
         {
-            Log.Debug("| Debugging is ON!");
-            Log.Debug("| SETTINGS:");
-            Log.Debug(string.Format("|    Emby Username:                    {0}", Config.embyUsername));
-            Log.Debug(string.Format("|    Emby User ID:                     {0}", Config.embyUserid));
-            Log.Debug(string.Format("|    Emby Access Token:                {0}", Config.embyAccessToken));
-            Log.Debug(string.Format("|    Plex Username:                    {0}", Config.plexUsername));
-            Log.Debug(string.Format("|    Plex Uuid:                        {0}", Config.plexUuid));
-            Log.Debug(string.Format("|    Plex Access Token:                {0}", Config.plexAccessToken));
-            Log.Debug(string.Format("|    MediaServer Type id:              {0}", Config.MediaServer));
-            Log.Debug(string.Format("|    Emby Access Token:                {0}", Config.embyAccessToken));
-            Log.Debug(string.Format("|    Sonarr API key:                   {0}", Config.sonarrAPIKey));
-            Log.Debug(string.Format("|    Interval:                         {0}", Config.Interval));
-            Log.Debug(string.Format("|    Minimum hours to keep:            {0}", Config.hoursToKeep));
-            Log.Debug(string.Format("|    Minimum episode quantity to keep: {0}", Config.episodesToKeep));
-            Log.Debug(string.Format("|    Keep favorite episodes:           {0}", Config.embyUsername));
+            if (!checkSettings())
+                return;
+
+            Log.Debug(string.Format("Interval: \"{0}\"; Minimum time to keep files: \"{1}\"; Minimum episode quantity to keep: \"{2}\"; Keeping favorite episodes: \"{3}\";", Config.Interval, Config.hoursToKeep, Config.episodesToKeep, Config.favoriteEpisodes));
 
             var seriesList = new List<Series>();
             var error = false;

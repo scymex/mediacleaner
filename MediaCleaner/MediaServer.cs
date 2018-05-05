@@ -48,6 +48,8 @@ namespace MediaCleaner
         public bool checkSettings()
         {
             checkMediaServer();
+            Log.Debug(string.Format("[Mediaserver type id:] {0}", Config.MediaServer));
+
             return mServer.checkSettings();
         }
     }

@@ -24,6 +24,8 @@ namespace MediaCleaner.Emby
 
         public bool checkSettings()
         {
+            Log.Debug(string.Format("[Mediaserver Emby] username: \"{0}\"; embyUserid: \"{1}\"; embyAccessToken: \"{2}\"; embyAddress: \"{3}\";", Config.embyUsername, Config.embyUserid, Config.embyAccessToken, Config.EmbyAddress));
+
             if (Config.embyUsername == "" || Config.embyUserid == "" || Config.embyAccessToken == "" || Config.EmbyAddress == "")
                 return false;
 

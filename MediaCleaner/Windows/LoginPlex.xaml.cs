@@ -45,37 +45,18 @@ namespace MediaCleaner
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (mediaserver == 0)
-            {
-                var plexaccesstoken = plexApi.getAccessToken(usernameTB.Text, passwordTB.Password);
+            var plexaccesstoken = plexApi.getAccessToken(usernameTB.Text, passwordTB.Password);
 
-                if (plexaccesstoken == "")
-                {
-                    Log.Error("Trying to log in failed.");
-                    wrongpw.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    Config.plexAccessToken = plexaccesstoken;
-                    LoginSuccessful = true;
-                    this.Close();
-                }
+            if (plexaccesstoken == "")
+            {
+                Log.Error("Trying to log in failed.");
+                wrongpw.Visibility = Visibility.Visible;
             }
-            else if (mediaserver == 1)
+            else
             {
-                var embyaccesstoken = embyApi.getAccessToken(usernameTB.Text, passwordTB.Password);
-
-                if (embyaccesstoken == "")
-                {
-                    Log.Error("Trying to log in failed.");
-                    wrongpw.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    Config.embyAccessToken = embyaccesstoken;
-                    LoginSuccessful = true;
-                    this.Close();
-                }
+                Config.plexAccessToken = plexaccesstoken;
+                LoginSuccessful = true;
+                this.Close();
             }
         }
     }
