@@ -1,6 +1,7 @@
 ﻿using RestSharp;
 using RestSharp.Deserializers;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MediaCleaner.Emby
 {
@@ -52,19 +53,11 @@ namespace MediaCleaner.Emby
             else
                 return true;
         }
-        /*public bool CheckSettings()
-        {
-            var validSettings = true;
-            if (!CheckApikey() || Properties.Settings.Default.emby_userid == "" || Properties.Settings.Default.emby_accesstoken == "" || Int32.Parse(Properties.Settings.Default.episodesToKeep) < 0 || Int32.Parse(Properties.Settings.Default.interval) < 0)
-                validSettings = false;
-
-            return validSettings;
-        }*/
 
         public string getAccessToken(string username_, string password_)
         {
             var request = new RestRequest("Users/AuthenticateByName", Method.POST);
-            request.AddHeader("Authorization", "MediaBrowser Client=\"PowerShellScript\", Device=\"PowerShellScriptEpisodeFiller\", DeviceId=\"1\", Version=\"1.0.0\"");
+            request.AddHeader("Authorization", string.Format("MediaBrowser Client=\"MediaCleaner\", Device=\"Media Cleaner\", DeviceId=\"1\", Version=\"{0}\"", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
             request.RequestFormat = DataFormat.Json;
             request.AddBody(new { Username = username_, password = APIHelper.SHA1Hash(password_), passwordMd5 = APIHelper.MD5Hash(password_) });
             var response = client.Execute(request);

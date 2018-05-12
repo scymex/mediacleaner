@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using RestSharp;
 using RestSharp.Deserializers;
@@ -27,12 +28,8 @@ namespace MediaCleaner.Plex
 
         public bool checkConnection()
         {
-            var request = new RestRequest("system", Method.GET);
+            var request = addPlexClientInfoHeaders(new RestRequest("system", Method.GET));
             request.RequestFormat = DataFormat.Json;
-            request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             var response = client.Execute(request);
 
@@ -46,12 +43,8 @@ namespace MediaCleaner.Plex
 
         public List<Section> getSections()
         {
-            var request = new RestRequest("library/sections", Method.GET);
+            var request = addPlexClientInfoHeaders(new RestRequest("library/sections", Method.GET));
             request.RequestFormat = DataFormat.Json;
-            request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             request.AddHeader("Accept", "application/json");
 
@@ -66,12 +59,8 @@ namespace MediaCleaner.Plex
 
         public List<Show> getSeries(string section_id)
         {
-            var request = new RestRequest(string.Format("library/sections/{0}/all", section_id), Method.GET);
+            var request = addPlexClientInfoHeaders(new RestRequest(string.Format("library/sections/{0}/all", section_id), Method.GET));
             request.RequestFormat = DataFormat.Json;
-            request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             request.AddHeader("Accept", "application/json");
 
@@ -88,12 +77,8 @@ namespace MediaCleaner.Plex
 
         public List<Season> getSeasons (string key)
         {
-            var request = new RestRequest(string.Format("library/metadata/{0}/children", key), Method.GET);
+            var request = addPlexClientInfoHeaders(new RestRequest(string.Format("library/metadata/{0}/children", key), Method.GET));
             request.RequestFormat = DataFormat.Json;
-            request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             request.AddHeader("Accept", "application/json");
 
@@ -108,12 +93,8 @@ namespace MediaCleaner.Plex
 
         public List<Episode> getEpisodesbySeason(string season_id)
         {
-            var request = new RestRequest(string.Format("library/metadata/{0}/children", season_id), Method.GET);
+            var request = addPlexClientInfoHeaders(new RestRequest(string.Format("library/metadata/{0}/children", season_id), Method.GET));
             request.RequestFormat = DataFormat.Json;
-            request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             request.AddHeader("Accept", "application/json");
 
@@ -163,23 +144,8 @@ namespace MediaCleaner.Plex
 
             var base64string = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password)));
 
-            var request = new RestRequest("/users/sign_in.json", Method.POST);
+            var request = addPlexClientInfoHeaders(new RestRequest("/users/sign_in.json", Method.POST));
             request.RequestFormat = DataFormat.Json;
-            //request.AddHeader("Authorization", string.Format("Basic {0}", base64string));
-            /*request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Username", "asd");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Platform", "1.0.0");
-            request.AddHeader("X-Plex-Platform-Version", "1.0.0");
-            request.AddHeader("X-Plex-Device", "Yo");
-            request.AddHeader("X-Plex-Client-Identifier", System.Guid.NewGuid().ToString());
-            request.AddHeader("X-Plex-Provides", "controller");*/
-
-            request.AddHeader("X-Plex-Device-Name", "Sonarr Cleaner");
-            request.AddHeader("X-Plex-Product", "Sonarr Cleaner 1.0.0");
-            request.AddHeader("X-Plex-Version", "1.0.0");
-            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
 
             request.AddJsonBody( new { user = new { login = username, password = password} });
 
@@ -199,6 +165,16 @@ namespace MediaCleaner.Plex
             else
                 return "";
 
+        }
+
+        private RestRequest addPlexClientInfoHeaders(RestRequest request)
+        {
+            request.AddHeader("X-Plex-Device-Name", "Media Cleaner");
+            request.AddHeader("X-Plex-Product", "MediaCleaner");
+            request.AddHeader("X-Plex-Version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            request.AddHeader("X-Plex-Client-Identifier", getClientToken());
+            
+            return request;
         }
     }
 }
