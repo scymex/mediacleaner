@@ -12,7 +12,7 @@ namespace MediaCleaner
             initMediaServer();
         }
 
-        private void initMediaServer()
+        public void initMediaServer()
         {
             switch (Config.MediaServer)
             {
@@ -52,5 +52,6 @@ namespace MediaCleaner
 
             return mServer.checkSettings();
         }
+
     }
 }
