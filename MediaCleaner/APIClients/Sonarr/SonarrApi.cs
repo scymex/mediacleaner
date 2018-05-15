@@ -1,9 +1,10 @@
-﻿using RestSharp;
+﻿using MediaCleaner.DataModels.Sonarr;
+using RestSharp;
 using RestSharp.Deserializers;
 using System.Collections.Generic;
 
 
-namespace MediaCleaner.Sonarr
+namespace MediaCleaner.APIClients
 {
     class SonarrApi
     {
@@ -60,7 +61,7 @@ namespace MediaCleaner.Sonarr
                 return false;
         }
 
-        public List<SonarrEpisode> getEpisodebySeries(string seriesId)
+        public List<Episode> getEpisodebySeries(string seriesId)
         {
             var request = new RestRequest("Episode", Method.GET);
 
@@ -71,7 +72,7 @@ namespace MediaCleaner.Sonarr
             var response = client.Execute(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                return deserialCount.Deserialize<List<SonarrEpisode>>(response);
+                return deserialCount.Deserialize<List<Episode>>(response);
             else
                 throw response.ErrorException;
         }

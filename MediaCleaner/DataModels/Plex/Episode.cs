@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MediaCleaner.Plex
+namespace MediaCleaner.DataModels.Plex
 {
     public class Part
     {

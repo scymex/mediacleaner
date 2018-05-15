@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using MediaCleaner.APIClients;
+using MediaCleaner.DataModels.Emby;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using MediaCleaner.Emby;
 
-namespace MediaCleaner
+namespace MediaCleaner.Views
 {
     /// <summary>
     /// Interaction logic for LoginEmby.xaml

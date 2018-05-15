@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MediaCleaner.Sonarr
+namespace MediaCleaner.DataModels.Sonarr
 {
     public class SystemStatus
     {

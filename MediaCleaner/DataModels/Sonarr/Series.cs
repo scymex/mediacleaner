@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MediaCleaner.Sonarr
+namespace MediaCleaner.DataModels.Sonarr
 {
     public class Image
     {

@@ -8,7 +8,9 @@ using ContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
 using ToolStripMenuItem = System.Windows.Forms.ToolStripMenuItem;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MediaCleaner.Sonarr;
+using MediaCleaner.APIClients;
+using MediaCleaner.DataModels.Sonarr;
+using MediaCleaner.Views;
 
 namespace MediaCleaner
 {

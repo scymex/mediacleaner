@@ -2,8 +2,9 @@
 using RestSharp.Deserializers;
 using System.Collections.Generic;
 using System.Reflection;
+using MediaCleaner.DataModels.Emby;
 
-namespace MediaCleaner.Emby
+namespace MediaCleaner.APIClients
 {
     class EmbyClient
     {
@@ -78,7 +79,6 @@ namespace MediaCleaner.Emby
             else
                 throw response.ErrorException;
         }
-
 
     }
 }

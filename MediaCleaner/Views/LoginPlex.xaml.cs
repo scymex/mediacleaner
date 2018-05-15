@@ -2,26 +2,28 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using MediaCleaner.Emby;
+using MediaCleaner.APIClients;
 
-namespace MediaCleaner
+namespace MediaCleaner.Views
 {
     /// <summary>
     /// Interaction logic for LoginEmby_password.xaml
     /// </summary>
-    public partial class LoginEmby_password : Window
+    public partial class LoginPlex : Window
     {
-        EmbyClient embyApi;
+        PlexClient plexApi;
         TextBox usernameTB;
         PasswordBox passwordTB;
         TextBlock wrongpw;
         public bool LoginSuccessful = false;
         public string username = "";
+        int mediaserver;
 
-        public LoginEmby_password(string username)
+        public LoginPlex(string username, int mediaserver_)
         {
             InitializeComponent();
-            embyApi = new EmbyClient();
+            mediaserver = mediaserver_;
+            plexApi = new PlexClient();
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
             {
@@ -38,16 +40,16 @@ namespace MediaCleaner
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var embyaccesstoken = embyApi.getAccessToken(usernameTB.Text, passwordTB.Password);
+            var plexaccesstoken = plexApi.getAccessToken(usernameTB.Text, passwordTB.Password);
 
-            if (embyaccesstoken == "")
+            if (plexaccesstoken == "")
             {
                 Log.Error("Trying to log in failed.");
                 wrongpw.Visibility = Visibility.Visible;
             }
             else
             {
-                Config.embyAccessToken = embyaccesstoken;
+                Config.plexAccessToken = plexaccesstoken;
                 LoginSuccessful = true;
                 this.Close();
             }

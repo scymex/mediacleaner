@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using MediaCleaner.Sonarr;
 using MediaCleaner.DataModels;
 using System;
+using MediaCleaner.APIClients;
 
 namespace MediaCleaner
 {
@@ -51,12 +51,12 @@ namespace MediaCleaner
         {
             // ????????? 
 
-            var seriesList = new List<Series>();
+            var seriesList = new List<DataModels.Sonarr.Series>();
             seriesList = sonarrApi.getSeriesList();
 
             foreach (var series in seriesList)
             {
-                var EpisodeList = new List<SonarrEpisode>();
+                var EpisodeList = new List<DataModels.Sonarr.Episode>();
                 EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
 
                 for (var i = EpisodeList.Count - 1; i >= 0; i--)
@@ -93,12 +93,12 @@ namespace MediaCleaner
             // get file list by sonarr
             var fileList = new List<string>();
 
-            var seriesList = new List<Series>();
+            var seriesList = new List<DataModels.Sonarr.Series>();
             seriesList = sonarrApi.getSeriesList();
 
             foreach (var series in seriesList)
             {
-                var EpisodeList = new List<SonarrEpisode>();
+                var EpisodeList = new List<DataModels.Sonarr.Episode>();
                 EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
 
                 for (var i = EpisodeList.Count - 1; i >= 0; i--)

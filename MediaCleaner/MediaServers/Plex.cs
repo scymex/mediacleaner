@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MediaCleaner.APIClients;
+using MediaCleaner.DataModels.Plex;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace MediaCleaner.Plex
+namespace MediaCleaner.MediaServers
 {
     class Plex : IMediaServer
     {

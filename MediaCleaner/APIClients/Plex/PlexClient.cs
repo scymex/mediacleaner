@@ -4,8 +4,9 @@ using System.Reflection;
 using System.Text;
 using RestSharp;
 using RestSharp.Deserializers;
+using MediaCleaner.DataModels.Plex;
 
-namespace MediaCleaner.Plex
+namespace MediaCleaner.APIClients
 {
     class PlexClient
     {

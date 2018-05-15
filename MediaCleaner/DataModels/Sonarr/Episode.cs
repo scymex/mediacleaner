@@ -1,6 +1,6 @@
-﻿namespace MediaCleaner.Sonarr
+﻿namespace MediaCleaner.DataModels.Sonarr
 {
-    public class SonarrEpisode
+    public class Episode
     {
         public int seriesId { get; set; }
         public int episodeFileId { get; set; }

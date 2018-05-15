@@ -1,4 +1,4 @@
-﻿namespace MediaCleaner.Emby
+﻿namespace MediaCleaner.DataModels.Emby
 {
     public class AuthenticateByName
     {

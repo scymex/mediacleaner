@@ -1,34 +1,27 @@
-﻿using System.Reflection;
+﻿using MediaCleaner.APIClients;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using MediaCleaner.Emby;
-using MediaCleaner.Plex;
 
-namespace MediaCleaner
+namespace MediaCleaner.Views
 {
     /// <summary>
     /// Interaction logic for LoginEmby_password.xaml
     /// </summary>
-    public partial class LoginPlex : Window
+    public partial class LoginEmby_password : Window
     {
         EmbyClient embyApi;
-        PlexClient plexApi;
         TextBox usernameTB;
         PasswordBox passwordTB;
         TextBlock wrongpw;
         public bool LoginSuccessful = false;
         public string username = "";
-        int mediaserver;
 
-        public LoginPlex(string username, int mediaserver_)
+        public LoginEmby_password(string username)
         {
             InitializeComponent();
-            mediaserver = mediaserver_;
-            if(mediaserver == 0)
-                plexApi = new PlexClient();
-            else if(mediaserver == 1)
-                embyApi = new EmbyClient();
+            embyApi = new EmbyClient();
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
             {
@@ -45,16 +38,16 @@ namespace MediaCleaner
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var plexaccesstoken = plexApi.getAccessToken(usernameTB.Text, passwordTB.Password);
+            var embyaccesstoken = embyApi.getAccessToken(usernameTB.Text, passwordTB.Password);
 
-            if (plexaccesstoken == "")
+            if (embyaccesstoken == "")
             {
                 Log.Error("Trying to log in failed.");
                 wrongpw.Visibility = Visibility.Visible;
             }
             else
             {
-                Config.plexAccessToken = plexaccesstoken;
+                Config.embyAccessToken = embyaccesstoken;
                 LoginSuccessful = true;
                 this.Close();
             }

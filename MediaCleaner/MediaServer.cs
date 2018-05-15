@@ -1,4 +1,5 @@
 ﻿using MediaCleaner.DataModels;
+using MediaCleaner.MediaServers;
 
 namespace MediaCleaner
 {
@@ -17,10 +18,10 @@ namespace MediaCleaner
             switch (Config.MediaServer)
             {
                 case 0:
-                    mServer = new Plex.Plex();
+                    mServer = new Plex();
                     break;
                 case 1:
-                    mServer = new Emby.Emby();
+                    mServer = new Emby();
                     break;
             }
 

@@ -1,4 +1,4 @@
-﻿namespace MediaCleaner.Sonarr
+﻿namespace MediaCleaner.DataModels.Sonarr
 {
     public class Quality2
     {

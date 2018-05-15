@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MediaCleaner.APIClients;
 using MediaCleaner.DataModels;
+using MediaCleaner.DataModels.Emby;
 
-namespace MediaCleaner.Emby
+namespace MediaCleaner.MediaServers
 {
     class Emby : IMediaServer
     {
