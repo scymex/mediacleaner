@@ -261,8 +261,6 @@ namespace MediaCleaner
             dispatcherTimer.Stop();
         }
 
-
-
         private void OpenSettings(Object sender, EventArgs e)
         {
             var preSettingsInterval = Config.Interval;
