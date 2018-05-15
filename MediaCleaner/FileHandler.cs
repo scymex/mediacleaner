@@ -11,6 +11,8 @@ namespace MediaCleaner
 
         SonarrApi sonarrApi;
         MediaServer mServer;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 
         public FileHandler(SonarrApi sonarrApi_, MediaServer mServer_)
         {
@@ -30,7 +32,7 @@ namespace MediaCleaner
 
                 if (episode == null)
                 {
-                    Log.Info(string.Format("Can't find this file in the mediaserver: {0}", filePath));
+                    logger.Info("Can't find this file in the mediaserver: {0}", filePath);
                     continue;
                 }
 
@@ -72,14 +74,14 @@ namespace MediaCleaner
                                 return true;
                             } catch (Exception ex)
                             {
-                                Log.Error(string.Format("There was an error deleting \"{0}\" Exception: {1}", filePath, ex.Message));
+                                logger.Error("There was an error deleting \"{0}\" Exception: {1}", filePath, ex.Message);
                                 return false;
                             }
                     }
                 }
             }
 
-            Log.Error(string.Format("There was an error while deleting the file: Can't find this file: \"{0}\"", filePath));
+            logger.Error("There was an error while deleting the file: Can't find this file: \"{0}\"", filePath);
 
             return false;
         }

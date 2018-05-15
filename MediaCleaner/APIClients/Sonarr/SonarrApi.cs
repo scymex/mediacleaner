@@ -12,6 +12,7 @@ namespace MediaCleaner.APIClients
         string URL_sonarr = Config.SonarrAddress + "/api";
         RestClient client;
         JsonDeserializer deserialCount = new JsonDeserializer();
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public SonarrApi()
         {
@@ -25,17 +26,20 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
-            Log.Debug(string.Format("Sonarr response checkconnection: {0}",response.Content));
+            logger.Debug(string.Format("Sonarr response checkconnection: {0}",response.Content));
 
             if (response.ResponseStatus == ResponseStatus.Completed)
                 return true;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public bool checkSettings()
         {
-            Log.Debug(string.Format("[Sonarr:] API key: \"{0}\"; Address: \"{1}\";", Config.sonarrAPIKey, Config.SonarrAddress));
+            logger.Debug("[Sonarr:] API key: \"{0}\"; Address: \"{1}\";", Config.sonarrAPIKey, Config.SonarrAddress);
             if (Config.sonarrAPIKey == "" || Config.SonarrAddress == "")
             {
                 return false;
@@ -53,7 +57,7 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
-            Log.Debug(string.Format("Sonarr response checkApikey: {0}", response.Content));
+            logger.Debug("Sonarr response checkApikey: {0}", response.Content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
@@ -74,7 +78,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return deserialCount.Deserialize<List<Episode>>(response);
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<Series> getSeriesList()
@@ -87,7 +94,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return deserialCount.Deserialize<List<Series>>(response);
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public bool deleteEpisodeFile(int episodeId)
@@ -100,7 +110,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
     }
 }

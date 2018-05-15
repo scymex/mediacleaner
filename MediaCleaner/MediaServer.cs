@@ -7,6 +7,7 @@ namespace MediaCleaner
     {
         IMediaServer mServer;
         private int mSType;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public MediaServer()
         {
@@ -49,7 +50,7 @@ namespace MediaCleaner
         public bool checkSettings()
         {
             checkMediaServer();
-            Log.Debug(string.Format("[Mediaserver type id:] {0}", Config.MediaServer));
+            logger.Debug("[Mediaserver type id:] {0}", Config.MediaServer);
 
             return mServer.checkSettings();
         }

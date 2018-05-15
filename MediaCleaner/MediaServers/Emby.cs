@@ -12,6 +12,7 @@ namespace MediaCleaner.MediaServers
     {
         EmbyClient embyAPI;
         List<UserItem> UserItemList;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Emby ()
         {
@@ -26,7 +27,7 @@ namespace MediaCleaner.MediaServers
 
         public bool checkSettings()
         {
-            Log.Debug(string.Format("[Mediaserver Emby] username: \"{0}\"; embyUserid: \"{1}\"; embyAccessToken: \"{2}\"; embyAddress: \"{3}\";", Config.embyUsername, Config.embyUserid, Config.embyAccessToken, Config.EmbyAddress));
+            logger.Debug("[Mediaserver Emby] username: \"{0}\"; embyUserid: \"{1}\"; embyAccessToken: \"{2}\"; embyAddress: \"{3}\";", Config.embyUsername, Config.embyUserid, Config.embyAccessToken, Config.EmbyAddress);
 
             if (Config.embyUsername == "" || Config.embyUserid == "" || Config.embyAccessToken == "" || Config.EmbyAddress == "")
                 return false;

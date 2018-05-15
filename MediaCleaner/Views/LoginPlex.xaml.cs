@@ -18,6 +18,7 @@ namespace MediaCleaner.Views
         public bool LoginSuccessful = false;
         public string username = "";
         int mediaserver;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public LoginPlex(string username, int mediaserver_)
         {
@@ -44,7 +45,7 @@ namespace MediaCleaner.Views
 
             if (plexaccesstoken == "")
             {
-                Log.Error("Trying to log in failed.");
+                logger.Error("Trying to log in failed.");
                 wrongpw.Visibility = Visibility.Visible;
             }
             else

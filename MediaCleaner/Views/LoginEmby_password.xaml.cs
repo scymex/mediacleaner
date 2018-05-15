@@ -17,6 +17,7 @@ namespace MediaCleaner.Views
         TextBlock wrongpw;
         public bool LoginSuccessful = false;
         public string username = "";
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public LoginEmby_password(string username)
         {
@@ -42,7 +43,7 @@ namespace MediaCleaner.Views
 
             if (embyaccesstoken == "")
             {
-                Log.Error("Trying to log in failed.");
+                logger.Error("Trying to log in failed.");
                 wrongpw.Visibility = Visibility.Visible;
             }
             else

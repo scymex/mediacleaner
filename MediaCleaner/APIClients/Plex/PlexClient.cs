@@ -13,6 +13,7 @@ namespace MediaCleaner.APIClients
         RestClient client;
         JsonDeserializer deserialCount = new JsonDeserializer();
         string URL_plex = Config.PlexAddress;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public PlexClient()
         {
@@ -34,12 +35,15 @@ namespace MediaCleaner.APIClients
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             var response = client.Execute(request);
 
-            Log.Debug(string.Format("Plex response checkconnection: {0}", response.Content));
+            logger.Debug("Plex response checkconnection: {0}", response.Content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<Section> getSections()
@@ -55,7 +59,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return sectionList;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<Show> getSeries(string section_id)
@@ -73,7 +80,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return series;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<Season> getSeasons (string key)
@@ -89,7 +99,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return series;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<Episode> getEpisodesbySeason(string season_id)
@@ -106,7 +119,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return episodeList;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<Episode> getUserItems()

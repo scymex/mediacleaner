@@ -14,7 +14,7 @@ using MediaCleaner.Views;
 
 namespace MediaCleaner
 {
-    public partial class App : Application 
+    public partial class MainApplication : Application 
     {
         public static NotifyIcon notifyIcon;
         ContextMenuStrip contextMenu;
@@ -24,6 +24,7 @@ namespace MediaCleaner
         DispatcherTimer dispatcherTimer;
         MediaServer mServer;
         SonarrApi sonarrApi;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -33,13 +34,16 @@ namespace MediaCleaner
                     Config.Debug = true;
             }
 
-            Log.Info("The application is running.");
-            Log.Debug("The application is running in debug mode.");
+            if (Config.Debug)
+                Log.EnableDebug();
+
+            logger.Info("The application is running.");
+            logger.Debug("The application is running in debug mode.");
 
             mServer = new MediaServer();
             sonarrApi = new SonarrApi();
 
-            App.notifyIcon = new NotifyIcon();
+            notifyIcon = new NotifyIcon();
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_stopped.ico"))
             {
                 notifyIcon.Icon = new Icon(stream);
@@ -118,7 +122,7 @@ namespace MediaCleaner
             if (!checkSettings())
                 return;
 
-            Log.Debug(string.Format("Interval: \"{0}\"; Minimum time to keep files: \"{1}\"; Minimum episode quantity to keep: \"{2}\"; Keeping favorite episodes: \"{3}\";", Config.Interval, Config.hoursToKeep, Config.episodesToKeep, Config.favoriteEpisodes));
+            logger.Debug("Interval: \"{0}\"; Minimum time to keep files: \"{1}\"; Minimum episode quantity to keep: \"{2}\"; Keeping favorite episodes: \"{3}\";", Config.Interval, Config.hoursToKeep, Config.episodesToKeep, Config.favoriteEpisodes);
 
             var seriesList = new List<Series>();
             var error = false;
@@ -128,7 +132,7 @@ namespace MediaCleaner
                 mServer.checkConnection();
             } catch (System.Net.WebException exc)
             {
-                Log.Error(string.Format("Exception: [MediaServer] {0}", exc.Status));
+                logger.Error("Exception: [MediaServer] {0}", exc.Status);
                 error = true;
             }
 
@@ -138,25 +142,25 @@ namespace MediaCleaner
             }
             catch (System.Net.WebException exc)
             {
-                Log.Error(string.Format("Exception: [Sonarr] {0}", exc.Status));
+                logger.Error("Exception: [Sonarr] {0}", exc.Status);
                 error = true;
             }
 
             if (!error && !sonarrApi.CheckApikey()) {
-                Log.Error("Sonarr: Unauthorized");
+                logger.Error("Sonarr: Unauthorized");
                 error = true;
             }
 
             if (error)
             {
                 dispatcherTimer.Interval = TimeSpan.FromMinutes(5);
-                Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(5).ToString("yy/MM/dd H:mm:ss")));
+                logger.Debug("Next thick at: {0}", DateTime.Now.AddMinutes(5).ToString("yy/MM/dd H:mm:ss"));
                 return;
             }
             else
             {
                 dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
-                Log.Debug(string.Format("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss")));
+                logger.Debug("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss"));
             }
             var fileHandler = new FileHandler(sonarrApi, mServer);
             var episodeList = fileHandler.getEpisodeListbyOrder(fileHandler.getEpisodeList());
@@ -204,7 +208,7 @@ namespace MediaCleaner
                 if(Math.Round((DateTime.Now - file.dateAdded).TotalHours) < Config.hoursToKeep)
                     not_Deletable += "hourstoKeep; ";
 
-                Log.Info(string.Format("[{0}] - Season: {1} - Episode: {2} - [{3}]: FilePath: {4}; IsFavorite: {5}; Played: {6}; dateAdded: {7}; now-dateAdded: {8}; deletable: {9}; Reason why its not deletable: {10}",
+                logger.Info("[{0}] - Season: {1} - Episode: {2} - [{3}]: FilePath: {4}; IsFavorite: {5}; Played: {6}; dateAdded: {7}; now-dateAdded: {8}; deletable: {9}; Reason why its not deletable: {10}",
                     file.SeriesName,
                     file.SeasonNumber,
                     file.EpisodeNumber,
@@ -216,12 +220,11 @@ namespace MediaCleaner
                     Math.Round((DateTime.Now - file.dateAdded).TotalHours),
                     deletable,
                     not_Deletable
-                    ));
+                    );
 
                 if (deletable)
                 {
-                    Log.Info(string.Format("File deleted: {0}", file.FilePath));
-                    Log.Deleted(string.Format("Deleted: {0}", file.FilePath));
+                    logger.Info("File deleted: {0}", file.FilePath);
 
                     fileHandler.deleteFile(file.FilePath);
                 }
@@ -231,9 +234,9 @@ namespace MediaCleaner
                     episodeCounter++;
             }
 
-            Log.Info(string.Format("Files: {0}", fileCounter));
-            Log.Info(string.Format("Deletable files: {0}", deletableCounter));
-            Log.Info(string.Format("Non-Deletable files: {0}", fileCounter - deletableCounter));
+            logger.Info("Files: {0}", fileCounter);
+            logger.Info("Deletable files: {0}", deletableCounter);
+            logger.Info("Non-Deletable files: {0}", fileCounter - deletableCounter);
         }
 
         private void start()
@@ -250,7 +253,7 @@ namespace MediaCleaner
             dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
             dispatcherTimer.Start();
             Task task = Task.Run((Action)TheBigThing);
-            Log.Info("A Cleaning phase just started.");
+            logger.Info("A Cleaning phase just started.");
         }
 
         private void stop()
@@ -267,10 +270,13 @@ namespace MediaCleaner
             settings.ShowDialog();
             if(settings.SettingsChanged)
             {
-                if(preSettingsInterval != Config.Interval)
+                if (Config.Debug)
+                    Log.EnableDebug();
+
+                if (preSettingsInterval != Config.Interval)
                 {
                     dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
-                    Log.Debug(string.Format("Some of the settings are changed, including the interval. New interval: {0}", Config.Interval));
+                    logger.Debug("Some of the settings are changed, including the interval. New interval: {0}", Config.Interval);
                 }
                 settings.SettingsChanged = false;
             }

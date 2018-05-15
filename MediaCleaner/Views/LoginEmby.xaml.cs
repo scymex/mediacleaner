@@ -36,6 +36,8 @@ namespace MediaCleaner.Views
     {
         EmbyClient embyApi;
         public bool LoginSuccessful;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public LoginEmby()
         {
             InitializeComponent();
@@ -56,7 +58,7 @@ namespace MediaCleaner.Views
             }
             catch (System.Net.WebException exc)
             {
-                Log.Error(string.Format("[Emby] {0}",exc.Status.ToString()));
+                logger.Error(string.Format("[Emby] {0}",exc.Status.ToString()));
             }
 
             foreach (var user in PublicUsers)

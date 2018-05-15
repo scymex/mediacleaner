@@ -11,7 +11,7 @@ namespace MediaCleaner.MediaServers
     {
         PlexClient plexAPI;
         List<Episode> UserItemList;
-
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Plex ()
         {
@@ -24,7 +24,7 @@ namespace MediaCleaner.MediaServers
 
         public bool checkSettings()
         {
-            Log.Debug(string.Format("[Mediaserver Plex] username: \"{0}\"; plexUuid: \"{1}\"; plexAccessToken: \"{2}\"; PlexAddress: \"{3}\";", Config.plexUsername, Config.plexUuid, Config.plexAccessToken, Config.PlexAddress));
+            logger.Debug("[Mediaserver Plex] username: \"{0}\"; plexUuid: \"{1}\"; plexAccessToken: \"{2}\"; PlexAddress: \"{3}\";", Config.plexUsername, Config.plexUuid, Config.plexAccessToken, Config.PlexAddress);
 
             if (Config.plexUsername == "" || Config.plexUuid == "" || Config.plexAccessToken == "" || Config.PlexAddress == "")
                 return false;

@@ -11,6 +11,7 @@ namespace MediaCleaner.APIClients
         // EMBY
         string URL_emby = Config.EmbyAddress;
         RestClient client;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         JsonDeserializer deserialCount = new JsonDeserializer();
 
@@ -26,12 +27,15 @@ namespace MediaCleaner.APIClients
             request.AddHeader("X-MediaBrowser-Token", Config.embyAccessToken);
             var response = client.Execute(request);
 
-            Log.Debug(string.Format("Emby response checkconnection: {0}", response.Content));
+            logger.Debug("Emby response checkconnection: {0}", response.Content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public List<UserItem> getUserItems()
@@ -44,7 +48,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return deserialCount.Deserialize<UserItems>(response).Items;
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
         public bool validateUser()
@@ -77,7 +84,10 @@ namespace MediaCleaner.APIClients
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return deserialCount.Deserialize<List<PublicUser>>(response);
             else
+            {
+                logger.Error(response.ErrorException);
                 throw response.ErrorException;
+            }
         }
 
     }

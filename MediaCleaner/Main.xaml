@@ -1,4 +1,4 @@
-﻿<Application x:Class="MediaCleaner.App"
+﻿<Application x:Class="MediaCleaner.MainApplication"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown"
