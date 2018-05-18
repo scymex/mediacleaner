@@ -12,9 +12,6 @@ namespace MediaCleaner.Views
     public partial class LoginPlex : Window
     {
         PlexClient plexApi;
-        TextBox usernameTB;
-        PasswordBox passwordTB;
-        TextBlock wrongpw;
         public bool LoginSuccessful = false;
         public string username = "";
         int mediaserver;
@@ -31,22 +28,18 @@ namespace MediaCleaner.Views
                 this.Icon = BitmapFrame.Create(stream);
             }
 
-            usernameTB = (TextBox)this.FindName("uname");
-            passwordTB = (PasswordBox)this.FindName("pw");
-            wrongpw = (TextBlock)this.FindName("wpw");
-
-            usernameTB.Text = username;
-            passwordTB.Focus();
+            uname.Text = username;
+            uname.Focus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var plexaccesstoken = plexApi.getAccessToken(usernameTB.Text, passwordTB.Password);
+            var plexaccesstoken = plexApi.getAccessToken(uname.Text, pw.Password);
 
             if (plexaccesstoken == "")
             {
                 logger.Error("Trying to log in failed.");
-                wrongpw.Visibility = Visibility.Visible;
+                wpw.Visibility = Visibility.Visible;
             }
             else
             {

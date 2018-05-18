@@ -14,9 +14,6 @@ namespace MediaCleaner.Views
     public partial class LoginEmby_password : Window
     {
         EmbyClient embyApi;
-        TextBox usernameTB;
-        PasswordBox passwordTB;
-        TextBlock wrongpw;
         public bool LoginSuccessful = false;
         public string username = "";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -31,19 +28,15 @@ namespace MediaCleaner.Views
                 this.Icon = BitmapFrame.Create(stream);
             }
 
-            usernameTB = (TextBox)this.FindName("uname");
-            passwordTB = (PasswordBox)this.FindName("pw");
-            wrongpw = (TextBlock)this.FindName("wpw");
-
-            usernameTB.Text = username;
-            passwordTB.Focus();
+            uname.Text = username;
+            pw.Focus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var embyaccesstoken = embyApi.getAccessToken(usernameTB.Text, passwordTB.Password);
+                var embyaccesstoken = embyApi.getAccessToken(uname.Text, pw.Password);
 
                 Config.embyAccessToken = embyaccesstoken;
                 LoginSuccessful = true;
@@ -54,7 +47,7 @@ namespace MediaCleaner.Views
                 if (ex.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     logger.Error("Trying to log in failed.");
-                    wrongpw.Visibility = Visibility.Visible;
+                    wpw.Visibility = Visibility.Visible;
                 }
 
                 logger.Error(ex.Message);
