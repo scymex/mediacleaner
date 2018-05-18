@@ -3,6 +3,7 @@ using RestSharp.Deserializers;
 using System.Collections.Generic;
 using System.Reflection;
 using MediaCleaner.DataModels.Emby;
+using System.Web.Http;
 
 namespace MediaCleaner.APIClients
 {
@@ -33,7 +34,6 @@ namespace MediaCleaner.APIClients
                 return true;
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -46,7 +46,10 @@ namespace MediaCleaner.APIClients
             var response = client.Execute(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return deserialCount.Deserialize<UserItems>(response).Items;
+            }
             else
             {
                 logger.Error(response.ErrorException);
@@ -69,10 +72,19 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             request.AddBody(new { Username = username_, password = APIHelper.SHA1Hash(password_), passwordMd5 = APIHelper.MD5Hash(password_) });
             var response = client.Execute(request);
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return deserialCount.Deserialize<AuthenticateByName>(response).AccessToken;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                throw new HttpResponseException(System.Net.HttpStatusCode.Unauthorized);
+            }
             else
-                return "";
+            {
+                throw response.ErrorException;
+            }
         }
 
         public List<PublicUser> getPublicUsers()
@@ -82,7 +94,10 @@ namespace MediaCleaner.APIClients
             var response = client.Execute(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return deserialCount.Deserialize<List<PublicUser>>(response);
+            }
             else
             {
                 logger.Error(response.ErrorException);

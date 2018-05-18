@@ -1,5 +1,7 @@
 ﻿using MediaCleaner.APIClients;
+using System;
 using System.Reflection;
+using System.Web.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -39,19 +41,29 @@ namespace MediaCleaner.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var embyaccesstoken = embyApi.getAccessToken(usernameTB.Text, passwordTB.Password);
+            try
+            {
+                var embyaccesstoken = embyApi.getAccessToken(usernameTB.Text, passwordTB.Password);
 
-            if (embyaccesstoken == "")
-            {
-                logger.Error("Trying to log in failed.");
-                wrongpw.Visibility = Visibility.Visible;
-            }
-            else
-            {
                 Config.embyAccessToken = embyaccesstoken;
                 LoginSuccessful = true;
                 this.Close();
             }
+            catch (HttpResponseException ex)
+            {
+                if (ex.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    logger.Error("Trying to log in failed.");
+                    wrongpw.Visibility = Visibility.Visible;
+                }
+
+                logger.Error(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            
         }
     }
 }

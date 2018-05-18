@@ -1,5 +1,6 @@
 ﻿using MediaCleaner.APIClients;
 using MediaCleaner.DataModels.Emby;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
@@ -88,7 +89,7 @@ namespace MediaCleaner.Views
 
             if (item1.HasPassword)
             {
-                LoginPlex login = new LoginPlex(username, 1);
+                LoginEmby_password login = new LoginEmby_password(username);
                 login.ShowDialog();
                 if (login.LoginSuccessful == true)
                 {
@@ -99,13 +100,16 @@ namespace MediaCleaner.Views
             }
             else
             {
-                var embyaccesstoken = embyApi.getAccessToken(username, "");
-
-                if (embyaccesstoken != "")
+                try
                 {
+                    var embyaccesstoken = embyApi.getAccessToken(username, "");
                     Config.embyAccessToken = embyaccesstoken;
                     LoginSuccessful = true;
                     this.Close();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
                 }
             }
         }
