@@ -53,5 +53,8 @@
     <Setting Name="plex_address" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://127.0.0.1:32400</Value>
     </Setting>
+    <Setting Name="trace" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

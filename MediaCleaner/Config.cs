@@ -2,6 +2,8 @@
 {
     public class Config
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         // Sonarr server ip and port
         public static string SonarrAddress
         {
@@ -174,6 +176,21 @@
             set
             {
                 Properties.Settings.Default.debug = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        // Debug
+
+        public static bool Trace
+        {
+            get
+            {
+                return Properties.Settings.Default.trace;
+            }
+            set
+            {
+                Properties.Settings.Default.trace = value;
                 Properties.Settings.Default.Save();
             }
         }

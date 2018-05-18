@@ -114,6 +114,7 @@ namespace MediaCleaner.Views
 
             // Debug checkbox
             debugCB.IsChecked = Config.Debug;
+            trace.IsChecked = Config.Trace;
         }
 
         private void intitiateEmby()
@@ -142,14 +143,29 @@ namespace MediaCleaner.Views
             }
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void Debug_Checked(object sender, RoutedEventArgs e)
         {
             Config.Debug = true;
+
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void Debug_Unchecked(object sender, RoutedEventArgs e)
         {
             Config.Debug = false;
+            if (trace.IsChecked ?? false)
+                trace.IsChecked = false;
+        }
+
+        private void Trace_Checked(object sender, RoutedEventArgs e)
+        {
+            Config.Trace = true;
+            if(!debug.IsChecked ?? false)
+                debug.IsChecked = true;
+        }
+
+        private void Trace_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Config.Trace = false;
         }
 
         private void Save(object sender, RoutedEventArgs e)

@@ -9,7 +9,8 @@
         WindowStartupLocation="CenterScreen" >
     <Grid Margin="0,0,0,-1">
         <Grid HorizontalAlignment="Left" Height="160" Margin="10,10,0,0" VerticalAlignment="Top" Width="497">
-            <CheckBox Content="Debug" x:Name="debug" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="439,0,0,0"/>
+            <CheckBox Content="Debug" x:Name="debug" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="Debug_Checked" Unchecked="Debug_Unchecked" Margin="439,0,0,0"/>
+            <CheckBox Content="Trace" x:Name="trace" HorizontalAlignment="Left" VerticalAlignment="Top" Width="58" Checked="Trace_Checked" Unchecked="Trace_Unchecked" Margin="439,20,0,0"/>
 
             <Label Content="Main" HorizontalAlignment="Left" Margin="0,-14,0,0" VerticalAlignment="Top" FontSize="18"/>
             <Grid Margin="10,10,312,10">

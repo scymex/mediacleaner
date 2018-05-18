@@ -10,6 +10,16 @@ namespace MediaCleaner
         {
             foreach (var rule in LogManager.Configuration.LoggingRules)
             {
+                rule.EnableLoggingForLevel(LogLevel.Debug);
+            }
+
+            LogManager.ReconfigExistingLoggers();
+        }
+
+        public static void EnableTrace()
+        {
+            foreach (var rule in LogManager.Configuration.LoggingRules)
+            {
                 rule.EnableLoggingForLevel(LogLevel.Trace);
                 rule.EnableLoggingForLevel(LogLevel.Debug);
             }
