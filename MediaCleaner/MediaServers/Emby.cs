@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using MediaCleaner.APIClients;
 using MediaCleaner.DataModels;
@@ -38,7 +39,15 @@ namespace MediaCleaner.MediaServers
         public Episode getItem(string episodePath)
         {
             if (UserItemList is null)
-                UserItemList = embyAPI.getUserItems();
+            {
+                try
+                {
+                    UserItemList = embyAPI.getUserItems();
+                } catch (WebException ex)
+                {
+                    logger.Error(ex);
+                }
+            }
 
             var embyItem = UserItemList.FirstOrDefault(item1 => item1.MediaSources.Any(mediasource => mediasource.Path == episodePath));
 

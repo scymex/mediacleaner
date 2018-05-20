@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using MediaCleaner.APIClients;
 using MediaCleaner.DataModels.Sonarr;
 using MediaCleaner.Views;
+using System.Net;
 
 namespace MediaCleaner
 {
@@ -134,19 +135,11 @@ namespace MediaCleaner
             try
             {
                 mServer.checkConnection();
-            } catch (System.Net.WebException exc)
-            {
-                logger.Error("Exception: [MediaServer] {0}", exc.Status);
-                error = true;
-            }
-
-            try
-            {
                 sonarrApi.checkConnection();
             }
-            catch (System.Net.WebException exc)
+            catch (WebException exc)
             {
-                logger.Error("Exception: [Sonarr] {0}", exc.Status);
+                logger.Error(exc);
                 error = true;
             }
 

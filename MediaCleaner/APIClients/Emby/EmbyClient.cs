@@ -9,16 +9,13 @@ namespace MediaCleaner.APIClients
 {
     class EmbyClient
     {
-        // EMBY
-        string URL_emby = Config.EmbyAddress;
         RestClient client;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
         JsonDeserializer deserialCount = new JsonDeserializer();
 
         public EmbyClient()
         {
-            client = new RestClient(URL_emby);
+            client = new RestClient(Config.EmbyAddress);
         }
 
         public bool checkConnection()
@@ -27,8 +24,6 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-MediaBrowser-Token", Config.embyAccessToken);
             var response = client.Execute(request);
-
-            logger.Debug("Emby response checkconnection: {0}", response.Content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
@@ -52,20 +47,11 @@ namespace MediaCleaner.APIClients
             }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
 
-        public bool validateUser()
-        {
-            if (Config.embyUserid == "" || Config.embyAccessToken == "")
-                return false;
-            else
-                return true;
-        }
-
-        public string getAccessToken(string username_, string password_)
+        public string getAccessToken(string username_, string password_ = "")
         {
             var request = new RestRequest("Users/AuthenticateByName", Method.POST);
             request.AddHeader("Authorization", string.Format("MediaBrowser Client=\"MediaCleaner\", Device=\"Media Cleaner\", DeviceId=\"1\", Version=\"{0}\"", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
@@ -79,6 +65,7 @@ namespace MediaCleaner.APIClients
                 return deserialCount.Deserialize<AuthenticateByName>(response).AccessToken;
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                logger.Trace(response.Content);
                 throw new HttpResponseException(System.Net.HttpStatusCode.Unauthorized);
             }
             else
@@ -100,10 +87,8 @@ namespace MediaCleaner.APIClients
             }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
-
     }
 }

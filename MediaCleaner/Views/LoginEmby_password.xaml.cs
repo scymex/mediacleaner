@@ -37,7 +37,6 @@ namespace MediaCleaner.Views
             try
             {
                 var embyaccesstoken = embyApi.getAccessToken(uname.Text, pw.Password);
-
                 Config.embyAccessToken = embyaccesstoken;
                 LoginSuccessful = true;
                 this.Close();

@@ -2,6 +2,7 @@
 using MediaCleaner.DataModels.Emby;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -57,9 +58,9 @@ namespace MediaCleaner.Views
             {
                 PublicUsers = embyApi.getPublicUsers();
             }
-            catch (System.Net.WebException exc)
+            catch (WebException exc)
             {
-                logger.Error(string.Format("[Emby] {0}",exc.Status.ToString()));
+                logger.Error(exc);
             }
 
             foreach (var user in PublicUsers)
@@ -102,7 +103,7 @@ namespace MediaCleaner.Views
             {
                 try
                 {
-                    var embyaccesstoken = embyApi.getAccessToken(username, "");
+                    var embyaccesstoken = embyApi.getAccessToken(username);
                     Config.embyAccessToken = embyaccesstoken;
                     LoginSuccessful = true;
                     this.Close();
