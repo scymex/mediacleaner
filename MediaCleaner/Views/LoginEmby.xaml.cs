@@ -10,30 +10,6 @@ using System.Windows.Media.Imaging;
 
 namespace MediaCleaner.Views
 {
-    /// <summary>
-    /// Interaction logic for LoginEmby.xaml
-
-    public class SampleData
-    {
-        public string username
-        {
-            get;
-            set;
-        }
-
-        public string userid
-        {
-            get;
-            set;
-        }
-
-        public bool HasPassword
-        {
-            get;
-            set;
-        }
-    }
-
     public partial class LoginEmby : Window
     {
         EmbyClient embyApi;
@@ -45,68 +21,42 @@ namespace MediaCleaner.Views
             InitializeComponent();
             embyApi = new EmbyClient();
 
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
-            {
-                this.Icon = BitmapFrame.Create(stream);
-            }
-
-
-            List<SampleData> data = new List<SampleData>();
-
-            var PublicUsers = new List<PublicUser>();
             try
             {
-                PublicUsers = embyApi.getPublicUsers();
+                userList.ItemsSource = embyApi.getPublicUsers();
             }
             catch (WebException exc)
             {
                 logger.Error(exc);
             }
-
-            foreach (var user in PublicUsers)
-            {
-                data.Add(new SampleData() { username = user.Name, userid = user.Id, HasPassword = user.HasPassword});
-            }
-
-
-            this.list.ItemsSource = data;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Login(object sender, RoutedEventArgs e)
         {
-            this.Close();
-        }
+            var listbox_ = sender as ListBox;
+            var selectedUser = listbox_.SelectedItem as PublicUser;
 
-        private void OnClick(object sender, RoutedEventArgs e)
-        {
-            var item = sender as ListBox;
-            var item1 = item.SelectedItem as SampleData;
+            Config.embyUsername = selectedUser.Name;
+            Config.embyUserid = selectedUser.Id;
 
-            var username = item1.username;
-            var userid = item1.userid;
-
-            Config.embyUsername = username;
-            Config.embyUserid = userid;
-
-            if (item1.HasPassword)
+            if (selectedUser.HasPassword)
             {
-                LoginEmby_password login = new LoginEmby_password(username);
+                LoginEmby_password login = new LoginEmby_password(selectedUser.Name);
                 login.ShowDialog();
                 if (login.LoginSuccessful == true)
                 {
                     LoginSuccessful = true;
-                    this.Close();
+                    Close();
                 }
-
             }
             else
             {
                 try
                 {
-                    var embyaccesstoken = embyApi.getAccessToken(username);
+                    var embyaccesstoken = embyApi.getAccessToken(selectedUser.Name);
                     Config.embyAccessToken = embyaccesstoken;
                     LoginSuccessful = true;
-                    this.Close();
+                    Close();
                 }
                 catch (Exception ex)
                 {

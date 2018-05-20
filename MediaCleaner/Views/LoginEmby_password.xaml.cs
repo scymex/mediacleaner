@@ -8,9 +8,6 @@ using System.Windows.Media.Imaging;
 
 namespace MediaCleaner.Views
 {
-    /// <summary>
-    /// Interaction logic for LoginEmby_password.xaml
-    /// </summary>
     public partial class LoginEmby_password : Window
     {
         EmbyClient embyApi;
@@ -23,23 +20,18 @@ namespace MediaCleaner.Views
             InitializeComponent();
             embyApi = new EmbyClient();
 
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaCleaner.Resource." + "icon_running.ico"))
-            {
-                this.Icon = BitmapFrame.Create(stream);
-            }
-
             uname.Text = username;
             pw.Focus();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Login(object sender, RoutedEventArgs e)
         {
             try
             {
                 var embyaccesstoken = embyApi.getAccessToken(uname.Text, pw.Password);
                 Config.embyAccessToken = embyaccesstoken;
                 LoginSuccessful = true;
-                this.Close();
+                Close();
             }
             catch (HttpResponseException ex)
             {
