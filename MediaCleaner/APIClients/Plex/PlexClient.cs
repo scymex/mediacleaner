@@ -5,6 +5,8 @@ using System.Text;
 using RestSharp;
 using RestSharp.Deserializers;
 using MediaCleaner.DataModels.Plex;
+using System.Net;
+using System.Web.Http;
 
 namespace MediaCleaner.APIClients
 {
@@ -12,12 +14,11 @@ namespace MediaCleaner.APIClients
     {
         RestClient client;
         JsonDeserializer deserialCount = new JsonDeserializer();
-        string URL_plex = Config.PlexAddress;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public PlexClient()
         {
-            client = new RestClient(URL_plex);
+            client = new RestClient(Config.PlexAddress);
         }
 
         public string getClientToken()
@@ -35,13 +36,10 @@ namespace MediaCleaner.APIClients
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
             var response = client.Execute(request);
 
-            logger.Debug("Plex response checkconnection: {0}", response.Content);
-
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return true;
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -57,10 +55,12 @@ namespace MediaCleaner.APIClients
             List<Section> sectionList = deserialCount.Deserialize<SectionContainer>(response).MediaContainer.Directory;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return sectionList;
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -76,12 +76,13 @@ namespace MediaCleaner.APIClients
             var shows = deserialCount.Deserialize<Shows>(response);
             var series = shows.MediaContainer.Metadata;
 
-
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return series;
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -97,10 +98,12 @@ namespace MediaCleaner.APIClients
             List<Season> series = deserialCount.Deserialize<Seasons>(response).MediaContainer.Metadata;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return series;
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -117,30 +120,65 @@ namespace MediaCleaner.APIClients
             List<Episode> episodeList = deserialCount.Deserialize<Episodes>(response).MediaContainer.Metadata;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return episodeList;
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
 
         public List<Episode> getUserItems()
         {
-            var sections = getSections();
+            List<Section> sections = new List<Section>();
+            try {
+                sections = getSections();
+            }
+            catch (WebException ex)
+            {
+                logger.Error(ex);
+            }
+
             List<Episode> useritems = new List<Episode>();
             foreach(var section in sections)
             {
                 if(section.type == "show")
                 {
-                    var series = getSeries(section.key);
-
-                    foreach(var show in series)
+                    List<Show> series = new List<Show>();
+                    try
                     {
-                        var seasons = getSeasons(show.ratingKey);
+                        series = getSeries(section.key);
+                    }
+                    catch (WebException ex)
+                    {
+                        logger.Error(ex);
+                    }
+
+                    foreach (var show in series)
+                    {
+                        List<Season> seasons = new List<Season>();
+                        try
+                        {
+                            seasons = getSeasons(show.ratingKey);
+                        }
+                        catch (WebException ex)
+                        {
+                            logger.Error(ex);
+                        }
+
                         foreach(var season in seasons)
                         {
-                            var episodeList = getEpisodesbySeason(season.ratingKey);
+                            List<Episode> episodeList = new List<Episode>();
+                            try
+                            {
+                                episodeList = getEpisodesbySeason(season.ratingKey);
+                            }
+                            catch (WebException ex)
+                            {
+                                logger.Error(ex);
+                            }
 
                             foreach(var episode in episodeList)
                             {
@@ -156,8 +194,7 @@ namespace MediaCleaner.APIClients
 
         public string getAccessToken(string username, string password)
         {
-            string URL_plextv = "https://plex.tv";
-            RestClient client_plextv = new RestClient(URL_plextv);
+            RestClient client_plextv = new RestClient("https://plex.tv");
 
             var base64string = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password)));
 
@@ -166,22 +203,26 @@ namespace MediaCleaner.APIClients
 
             request.AddJsonBody( new { user = new { login = username, password = password} });
 
-
             var response = client_plextv.Execute(request);
-
             var user = deserialCount.Deserialize<Users>(response).user;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
-
                 Config.plexUsername = user.username;
                 Config.plexUuid = user.uuid;
 
+                logger.Trace(response.Content);
                 return user.authentication_token;
             }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                logger.Trace(response.Content);
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
             else
-                return "";
-
+            {
+                throw response.ErrorException;
+            }
         }
 
         private RestRequest addPlexClientInfoHeaders(RestRequest request)
