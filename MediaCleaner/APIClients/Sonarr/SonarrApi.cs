@@ -2,7 +2,8 @@
 using RestSharp;
 using RestSharp.Deserializers;
 using System.Collections.Generic;
-
+using System.Net;
+using System.Web.Http;
 
 namespace MediaCleaner.APIClients
 {
@@ -26,13 +27,10 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
-            logger.Debug(string.Format("Sonarr response checkconnection: {0}",response.Content));
-
             if (response.ResponseStatus == ResponseStatus.Completed)
                 return true;
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -59,10 +57,20 @@ namespace MediaCleaner.APIClients
 
             logger.Debug("Sonarr response checkApikey: {0}", response.Content);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return true;
+            }
+            else if(response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                logger.Trace(response.Content);
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
             else
-                return false;
+            {
+                throw response.ErrorException;
+            }
         }
 
         public List<Episode> getEpisodebySeries(string seriesId)
@@ -76,10 +84,12 @@ namespace MediaCleaner.APIClients
             var response = client.Execute(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return deserialCount.Deserialize<List<Episode>>(response);
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -92,10 +102,12 @@ namespace MediaCleaner.APIClients
             var response = client.Execute(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return deserialCount.Deserialize<List<Series>>(response);
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }
@@ -107,11 +119,13 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                logger.Trace(response.Content);
                 return true;
+            }
             else
             {
-                logger.Error(response.ErrorException);
                 throw response.ErrorException;
             }
         }

@@ -54,12 +54,28 @@ namespace MediaCleaner
             // ????????? 
 
             var seriesList = new List<DataModels.Sonarr.Series>();
-            seriesList = sonarrApi.getSeriesList();
+
+            try
+            {
+                seriesList = sonarrApi.getSeriesList();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
 
             foreach (var series in seriesList)
             {
                 var EpisodeList = new List<DataModels.Sonarr.Episode>();
-                EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
+
+                try
+                {
+                    EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
+                }
+                catch(Exception ex)
+                {
+                    logger.Error(ex);
+                }
 
                 for (var i = EpisodeList.Count - 1; i >= 0; i--)
                 {
@@ -74,7 +90,7 @@ namespace MediaCleaner
                                 return true;
                             } catch (Exception ex)
                             {
-                                logger.Error("There was an error deleting \"{0}\" Exception: {1}", filePath, ex.Message);
+                                logger.Error(ex, "There was an error deleting \"{0}\" Exception: ", filePath);
                                 return false;
                             }
                     }
@@ -96,12 +112,28 @@ namespace MediaCleaner
             var fileList = new List<string>();
 
             var seriesList = new List<DataModels.Sonarr.Series>();
-            seriesList = sonarrApi.getSeriesList();
+
+            try
+            {
+                seriesList = sonarrApi.getSeriesList();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
 
             foreach (var series in seriesList)
             {
                 var EpisodeList = new List<DataModels.Sonarr.Episode>();
-                EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
+
+                try
+                {
+                    EpisodeList = sonarrApi.getEpisodebySeries(series.id.ToString());
+                }
+                catch(Exception ex)
+                {
+                    logger.Error(ex);
+                }
 
                 for (var i = EpisodeList.Count - 1; i >= 0; i--)
                 {

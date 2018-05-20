@@ -12,6 +12,7 @@ using MediaCleaner.APIClients;
 using MediaCleaner.DataModels.Sonarr;
 using MediaCleaner.Views;
 using System.Net;
+using System.Web.Http;
 
 namespace MediaCleaner
 {
@@ -136,15 +137,16 @@ namespace MediaCleaner
             {
                 mServer.checkConnection();
                 sonarrApi.checkConnection();
+                sonarrApi.CheckApikey();
             }
-            catch (WebException exc)
+            catch (HttpResponseException ex)
             {
-                logger.Error(exc);
+                logger.Error(ex, "HTTP Error 401.1 - Unauthorized: Access is denied: ");
                 error = true;
             }
-
-            if (!error && !sonarrApi.CheckApikey()) {
-                logger.Error("Sonarr: Unauthorized");
+            catch (Exception ex)
+            {
+                logger.Error(ex);
                 error = true;
             }
 
