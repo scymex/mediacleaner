@@ -14,6 +14,8 @@ namespace MediaCleaner.MediaServers
         EmbyClient embyAPI;
         List<UserItem> UserItemList;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        public int _timestamp { get; set; }
+        private int _lastTimestamp;
 
         public Emby ()
         {
@@ -38,7 +40,7 @@ namespace MediaCleaner.MediaServers
 
         public Episode getItem(string episodePath)
         {
-            if (UserItemList is null)
+            if (UserItemList is null || _lastTimestamp != _timestamp)
             {
                 try
                 {
@@ -64,6 +66,8 @@ namespace MediaCleaner.MediaServers
             UserItem.IsFavorite = embyItem.UserData.IsFavorite;
             UserItem.Played = embyItem.UserData.Played;
             UserItem.dateAdded = DateTime.Parse(embyItem.DateCreated);
+
+            _lastTimestamp = _timestamp;
 
             return UserItem;
         }

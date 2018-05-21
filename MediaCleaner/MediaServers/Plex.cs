@@ -12,6 +12,8 @@ namespace MediaCleaner.MediaServers
         PlexClient plexAPI;
         List<Episode> UserItemList;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        public int _timestamp { get; set; }
+        private int _lastTimestamp;
 
         public Plex ()
         {
@@ -34,7 +36,7 @@ namespace MediaCleaner.MediaServers
 
         public DataModels.Episode getItem(string episodePath)
         {
-            if (UserItemList is null)
+            if (UserItemList is null || _lastTimestamp != _timestamp)
                 UserItemList = plexAPI.getUserItems();
 
             var PlexItem = UserItemList.FirstOrDefault(item1 => item1.Media.Any(sourcelist => sourcelist.Part.Any(source => source.file == episodePath)));
@@ -56,6 +58,8 @@ namespace MediaCleaner.MediaServers
             UserItem.IsFavorite = false;
             UserItem.Played = played;
             UserItem.dateAdded = new System.DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(PlexItem.addedAt);
+
+            _lastTimestamp = _timestamp;
 
             return UserItem;
         }

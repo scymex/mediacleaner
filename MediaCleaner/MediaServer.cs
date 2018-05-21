@@ -9,6 +9,8 @@ namespace MediaCleaner
         private int mSType;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        public int _timestamp { get; set; }
+
         public MediaServer()
         {
             initMediaServer();
@@ -31,6 +33,7 @@ namespace MediaCleaner
 
         private void checkMediaServer()
         {
+            mServer._timestamp = _timestamp;
             if (mSType != Config.MediaServer)
                 initMediaServer();
         }

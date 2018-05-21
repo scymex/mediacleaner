@@ -161,6 +161,8 @@ namespace MediaCleaner
                 dispatcherTimer.Interval = TimeSpan.FromMinutes(Config.Interval);
                 logger.Debug("Next thick at: {0}", DateTime.Now.AddMinutes(Config.Interval).ToString("yy/MM/dd H:mm:ss"));
             }
+
+            mServer._timestamp = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             var fileHandler = new FileHandler(sonarrApi, mServer);
             var episodeList = fileHandler.getEpisodeListbyOrder(fileHandler.getEpisodeList());
 

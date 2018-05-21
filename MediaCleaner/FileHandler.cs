@@ -18,7 +18,6 @@ namespace MediaCleaner
         {
             sonarrApi = sonarrApi_;
             mServer = mServer_;
-            mServer.initMediaServer(); // we need to reset the media server, there is a logic flaw in getting the items, this is the easiest and fastest way to fix it for now.
         }
 
         public List<Episode> getEpisodeList ()
@@ -102,7 +101,7 @@ namespace MediaCleaner
             return false;
         }
 
-        public List<string> getFileList()
+        private List<string> getFileList()
         {
             // get file list by path
             // TODO
