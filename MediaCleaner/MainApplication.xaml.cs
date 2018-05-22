@@ -39,9 +39,9 @@ namespace MediaCleaner
             }
 
             if (Config.Debug)
-                Log.EnableDebug();
+                Log.EnableDebugLevel();
             if (Config.Trace)
-                Log.EnableTrace();
+                Log.EnableTraceLevel();
 
             logger.Info("The application is running.");
             logger.Debug("The application is running in debug mode.");
@@ -270,10 +270,14 @@ namespace MediaCleaner
             if(settings.SettingsChanged)
             {
                 if (Config.Debug)
-                    Log.EnableDebug();
+                    Log.EnableDebugLevel();
+                else
+                    Log.DisableDebugLevel();
 
                 if (Config.Trace)
-                    Log.EnableTrace();
+                    Log.EnableTraceLevel();
+                else
+                    Log.DisableTraceLevel();
 
                 if (preSettingsInterval != Config.Interval)
                 {
