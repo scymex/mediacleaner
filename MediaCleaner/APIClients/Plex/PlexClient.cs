@@ -21,6 +21,12 @@ namespace MediaCleaner.APIClients
             client = new RestClient(Config.PlexAddress);
         }
 
+        private void checkBaseUrl()
+        {
+            if (client.BaseUrl.ToString() != Config.PlexAddress)
+                client = new RestClient(Config.PlexAddress);
+        }
+
         public string getClientToken()
         {
             if (Config.plexClientToken == "")
@@ -31,6 +37,7 @@ namespace MediaCleaner.APIClients
 
         public bool checkConnection()
         {
+            checkBaseUrl();
             var request = addPlexClientInfoHeaders(new RestRequest("system", Method.GET));
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
@@ -46,6 +53,7 @@ namespace MediaCleaner.APIClients
 
         public List<Section> getSections()
         {
+            checkBaseUrl();
             var request = addPlexClientInfoHeaders(new RestRequest("library/sections", Method.GET));
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
@@ -67,6 +75,7 @@ namespace MediaCleaner.APIClients
 
         public List<Show> getSeries(string section_id)
         {
+            checkBaseUrl();
             var request = addPlexClientInfoHeaders(new RestRequest(string.Format("library/sections/{0}/all", section_id), Method.GET));
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
@@ -89,6 +98,7 @@ namespace MediaCleaner.APIClients
 
         public List<Season> getSeasons (string key)
         {
+            checkBaseUrl();
             var request = addPlexClientInfoHeaders(new RestRequest(string.Format("library/metadata/{0}/children", key), Method.GET));
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
@@ -110,6 +120,7 @@ namespace MediaCleaner.APIClients
 
         public List<Episode> getEpisodesbySeason(string season_id)
         {
+            checkBaseUrl();
             var request = addPlexClientInfoHeaders(new RestRequest(string.Format("library/metadata/{0}/children", season_id), Method.GET));
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Plex-Token", Config.plexAccessToken);
@@ -132,6 +143,8 @@ namespace MediaCleaner.APIClients
 
         public List<Episode> getUserItems()
         {
+            checkBaseUrl();
+
             List<Section> sections = new List<Section>();
             try {
                 sections = getSections();

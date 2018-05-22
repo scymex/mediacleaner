@@ -20,8 +20,15 @@ namespace MediaCleaner.APIClients
             client = new RestClient(URL_sonarr);
         }
 
+        private void checkBaseUrl()
+        {
+            if (client.BaseUrl.ToString() != Config.SonarrAddress)
+                client = new RestClient(Config.SonarrAddress + "/api");
+        }
+
         public bool checkConnection()
         {
+            checkBaseUrl();
             var request = new RestRequest("system/status", Method.GET);
 
             request.RequestFormat = DataFormat.Json;
@@ -48,6 +55,7 @@ namespace MediaCleaner.APIClients
 
         public bool CheckApikey()
         {
+            checkBaseUrl();
             var request = new RestRequest("system/status", Method.GET);
 
             request.AddHeader("X-Api-Key", Config.sonarrAPIKey);
@@ -75,6 +83,7 @@ namespace MediaCleaner.APIClients
 
         public List<Episode> getEpisodebySeries(string seriesId)
         {
+            checkBaseUrl();
             var request = new RestRequest("Episode", Method.GET);
 
             request.AddHeader("X-Api-Key", Config.sonarrAPIKey);
@@ -83,7 +92,7 @@ namespace MediaCleaner.APIClients
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 logger.Trace(response.Content);
                 return deserialCount.Deserialize<List<Episode>>(response);
@@ -96,12 +105,13 @@ namespace MediaCleaner.APIClients
 
         public List<Series> getSeriesList()
         {
+            checkBaseUrl();
             var request = new RestRequest("Series", Method.GET);
             request.AddHeader("X-Api-Key", Config.sonarrAPIKey);
             request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 logger.Trace(response.Content);
                 return deserialCount.Deserialize<List<Series>>(response);
@@ -114,6 +124,7 @@ namespace MediaCleaner.APIClients
 
         public bool deleteEpisodeFile(int episodeId)
         {
+            checkBaseUrl();
             var request = new RestRequest(string.Format("EpisodeFile/{0}", episodeId), Method.DELETE);
             request.AddHeader("X-Api-Key", Config.sonarrAPIKey);
             request.RequestFormat = DataFormat.Json;
